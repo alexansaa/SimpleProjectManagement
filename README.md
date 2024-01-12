@@ -1,0 +1,1 @@
+This is the Simple Project Manager Application written on Java and Vaadin.
