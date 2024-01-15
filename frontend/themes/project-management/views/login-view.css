@@ -1,4 +1,4 @@
-.inicio-view {
+.login-view {
   padding: 2px;
   box-sizing: border-box;
   display: block;
@@ -20,51 +20,51 @@
   --cv-checkerboard-size: 16px;
 }
 
-.inicio-view[dragging] {
+.login-view[dragging] {
   --cv-checkerboard-color1: hsl(var(--cv-blue) / 0.2);
   --cv-checkerboard-color2: hsl(var(--cv-blue) / 0.1);
   --cv-layout-border-color: var(--cv-dropzone-border-color);
 }
 
-.inicio-view .preview-container {
+.login-view .preview-container {
   display: contents;
 }
 
 /* The root layout is not necessarily inside a flex box so width/height needs to be used */
-.inicio-view .preview-container > .layout[style*='align-self: stretch'] {
+.login-view .preview-container > .layout[style*='align-self: stretch'] {
   width: 100%;
 }
-.inicio-view .preview-container > .layout[style*='flex-grow: 1'] {
+.login-view .preview-container > .layout[style*='flex-grow: 1'] {
   height: 100%;
 }
 
 /* Apply some default gap and padding to layouts that don't have inline styles for them while dragging. */
-.inicio-view[dragging] .layout:not([style*='gap:']) {
+.login-view[dragging] .layout:not([style*='gap:']) {
   gap: 8px;
 }
 
-.inicio-view[dragging] .layout:not([style*='padding:'], [empty]) {
+.login-view[dragging] .layout:not([style*='padding:'], [empty]) {
   padding: 8px;
 }
 
-.inicio-view .cover-overlay {
+.login-view .cover-overlay {
   position: absolute;
   border-radius: 1px;
 }
 
-.inicio-view:not([starting-drag]) .cover-overlay.editable-hovering {
+.login-view:not([starting-drag]) .cover-overlay.editable-hovering {
   outline: 2px solid hsl(var(--cv-blue) / 1);
   outline-offset: -1px;
 }
 
-.inicio-view:not([starting-drag]) .cover-overlay.editable-editing {
+.login-view:not([starting-drag]) .cover-overlay.editable-editing {
   outline: 1px solid hsl(var(--cv-blue) / 1);
   outline-offset: -1px;
   box-shadow: inset 0 0 0 2px var(--lumo-base-color);
 }
 
-.inicio-view .overlays,
-.inicio-view .drop-zones {
+.login-view .overlays,
+.login-view .drop-zones {
   position: absolute;
   top: 0;
   left: 0;
@@ -73,11 +73,11 @@
   z-index: 1;
 }
 
-.inicio-view:not([dragging]) .drop-zones {
+.login-view:not([dragging]) .drop-zones {
   pointer-events: none;
 }
 
-.inicio-view .drop-zone {
+.login-view .drop-zone {
   position: absolute;
   box-sizing: border-box;
   border-radius: 1px;
@@ -85,13 +85,13 @@
   min-width: 10px;
 }
 
-.inicio-view[dragging] .drop-zone:not([empty-layout]) {
+.login-view[dragging] .drop-zone:not([empty-layout]) {
   outline: 1px dashed var(--cv-dropzone-border-color);
   outline-offset: -2px;
   background-color: var(--cv-dropzone-bg-color);
 }
 
-.inicio-view .drop-zone[remaining-space] {
+.login-view .drop-zone[remaining-space] {
   background: repeating-linear-gradient(
     -45deg,
     var(--cv-stripe-color),
@@ -101,7 +101,7 @@
   );
 }
 
-.inicio-view[dragging] .drop-zone[drag-over] {
+.login-view[dragging] .drop-zone[drag-over] {
   background: var(--cv-droptarget-bg-color);
   outline: 1px solid var(--cv-droptarget-border-color);
   outline-offset: -1px;
@@ -112,7 +112,7 @@
   z-index: -1;
 }
 
-.inicio-view:not([readonly]) .layout[empty],vaadin-form-layout[empty] {
+.login-view:not([readonly]) .layout[empty],vaadin-form-layout[empty] {
   border-radius: 1px;
   background: repeating-conic-gradient(var(--cv-checkerboard-color1) 0% 25%, var(--cv-checkerboard-color2) 0% 50%) 50% /
     var(--cv-checkerboard-size) var(--cv-checkerboard-size);
@@ -120,45 +120,45 @@
   outline: 1px dashed var(--cv-layout-border-color);
   outline-offset: -2px;
 }
-.inicio-view[dragging]:not([readonly]) vaadin-form-layout[empty]{
+.login-view[dragging]:not([readonly]) vaadin-form-layout[empty]{
   background: transparent;
 }
 
 
-.inicio-view .layout[empty]::before {
+.login-view .layout[empty]::before {
   content: '';
   display: block;
   min-width: 64px;
   min-height: 32px;
 }
 
-.inicio-view[readonly] .drop-zones,
-.inicio-view[readonly] .overlays {
+.login-view[readonly] .drop-zones,
+.login-view[readonly] .overlays {
   display: none;
 }
 
-.inicio-view[inline-editing] .drop-zones,
-.inicio-view[inline-editing] .overlays {
+.login-view[inline-editing] .drop-zones,
+.login-view[inline-editing] .overlays {
   display: none;
 }
-.inicio-view .content-wrapper[contenteditable='true']{
+.login-view .content-wrapper[contenteditable='true']{
   display: inline-block;
   overflow: hidden;
   width: 100%;
 }
 
 
-.inicio-view[dragging] vaadin-form-layout {
+.login-view[dragging] vaadin-form-layout {
   padding: 8px;
 }
-.inicio-view vaadin-form-layout[empty]::before {
+.login-view vaadin-form-layout[empty]::before {
   content: '';
   display: block;
   min-width: 64px;
   min-height: 32px;
 }
 
-.inicio-view[dragging] vaadin-form-layout:not([empty])::after {
+.login-view[dragging] vaadin-form-layout:not([empty])::after {
   content: '';
   display: block;
   min-width: 64px;

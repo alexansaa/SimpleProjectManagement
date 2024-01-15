@@ -1,4 +1,4 @@
-package com.example.application.views.proyecto2;
+package com.example.application.views.tarea;
 
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
@@ -27,13 +27,13 @@ import jakarta.annotation.security.RolesAllowed;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-@PageTitle("Proyecto 2")
-@Route(value = "proyecto-usuario", layout = MainLayout.class)
+@PageTitle("tarea")
+@Route(value = "tarea", layout = MainLayout.class)
 @RolesAllowed("USER")
 @Uses(Icon.class)
-public class Proyecto2View extends Composite<VerticalLayout> {
+public class TareaView extends Composite<VerticalLayout> {
 
-    public Proyecto2View() {
+    public TareaView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
@@ -165,10 +165,9 @@ public class Proyecto2View extends Composite<VerticalLayout> {
     }
 
     private void setMenuBarSampleData(MenuBar menuBar) {
-        menuBar.addItem("View");
-        menuBar.addItem("Edit");
-        menuBar.addItem("Share");
-        menuBar.addItem("Move");
+        menuBar.addItem("Editar");
+        menuBar.addItem("Eliminar");
+        menuBar.addItem("Crear");
     }
 
     private void setMessageListSampleData(MessageList messageList) {

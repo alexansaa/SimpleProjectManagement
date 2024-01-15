@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- Project from https://start.vaadin.com/project/5f23c082-54d5-4a6d-a045-8ef99baf6bc0 -->
+    <!-- Project from https://start.vaadin.com/project/e39b1d82-2bc7-46a9-96ec-586b0d6b3360 -->
     <groupId>com.example.application</groupId>
     <artifactId>project-management</artifactId>
     <name>project-management</name>
@@ -56,11 +56,6 @@
             <groupId>org.parttio</groupId>
             <artifactId>line-awesome</artifactId>
             <version>2.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <dependency>
