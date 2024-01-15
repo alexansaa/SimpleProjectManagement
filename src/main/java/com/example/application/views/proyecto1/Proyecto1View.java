@@ -20,11 +20,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
-import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Proyecto 1")
 @Route(value = "proyecto1", layout = MainLayout.class)
-@RolesAllowed({"ALUMNO", "PROFESOR"})
 @Uses(Icon.class)
 public class Proyecto1View extends Composite<VerticalLayout> {
 
