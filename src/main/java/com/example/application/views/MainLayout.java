@@ -4,12 +4,11 @@ import com.example.application.data.User;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.crearproyecto.CrearProyectoView;
 import com.example.application.views.creartarea.CrearTareaView;
-import com.example.application.views.helloworld.HelloWorldView;
 import com.example.application.views.home.HomeView;
-import com.example.application.views.homeadmin.HomeAdminView;
-import com.example.application.views.login.LoginView;
-import com.example.application.views.proyecto.ProyectoView;
-import com.example.application.views.proyectoadmin.ProyectoAdminView;
+import com.example.application.views.inicio.InicioView;
+import com.example.application.views.nuevocomentario.NuevoComentarioView;
+import com.example.application.views.proyecto1.Proyecto1View;
+import com.example.application.views.proyecto2.Proyecto2View;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -75,30 +74,22 @@ public class MainLayout extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
-        if (accessChecker.hasAccess(HelloWorldView.class)) {
-            nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
-
-        }
-        if (accessChecker.hasAccess(LoginView.class)) {
-            nav.addItem(new SideNavItem("Login", LoginView.class, LineAwesomeIcon.USER_LOCK_SOLID.create()));
+        if (accessChecker.hasAccess(InicioView.class)) {
+            nav.addItem(new SideNavItem("Inicio", InicioView.class, LineAwesomeIcon.USER_LOCK_SOLID.create()));
 
         }
         if (accessChecker.hasAccess(HomeView.class)) {
             nav.addItem(new SideNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create()));
 
         }
-        if (accessChecker.hasAccess(HomeAdminView.class)) {
-            nav.addItem(new SideNavItem("Home Admin", HomeAdminView.class, LineAwesomeIcon.HOME_SOLID.create()));
-
-        }
-        if (accessChecker.hasAccess(ProyectoView.class)) {
+        if (accessChecker.hasAccess(Proyecto1View.class)) {
             nav.addItem(
-                    new SideNavItem("Proyecto", ProyectoView.class, LineAwesomeIcon.PROJECT_DIAGRAM_SOLID.create()));
+                    new SideNavItem("Proyecto 1", Proyecto1View.class, LineAwesomeIcon.PROJECT_DIAGRAM_SOLID.create()));
 
         }
-        if (accessChecker.hasAccess(ProyectoAdminView.class)) {
-            nav.addItem(new SideNavItem("Proyecto Admin", ProyectoAdminView.class,
-                    LineAwesomeIcon.PROJECT_DIAGRAM_SOLID.create()));
+        if (accessChecker.hasAccess(Proyecto2View.class)) {
+            nav.addItem(
+                    new SideNavItem("Proyecto 2", Proyecto2View.class, LineAwesomeIcon.PROJECT_DIAGRAM_SOLID.create()));
 
         }
         if (accessChecker.hasAccess(CrearProyectoView.class)) {
@@ -108,6 +99,11 @@ public class MainLayout extends AppLayout {
         }
         if (accessChecker.hasAccess(CrearTareaView.class)) {
             nav.addItem(new SideNavItem("Crear Tarea", CrearTareaView.class, LineAwesomeIcon.BOOK_OPEN_SOLID.create()));
+
+        }
+        if (accessChecker.hasAccess(NuevoComentarioView.class)) {
+            nav.addItem(new SideNavItem("Nuevo Comentario", NuevoComentarioView.class,
+                    LineAwesomeIcon.BOOK_OPEN_SOLID.create()));
 
         }
 

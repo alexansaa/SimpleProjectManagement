@@ -4,6 +4,7 @@ import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -18,6 +19,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import jakarta.annotation.security.RolesAllowed;
+import java.util.ArrayList;
+import java.util.List;
 
 @PageTitle("Crear Proyecto")
 @Route(value = "crear-proyecto", layout = MainLayout.class)
@@ -30,6 +33,7 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         FormLayout formLayout2Col = new FormLayout();
         TextField textField = new TextField();
         DatePicker datePicker = new DatePicker();
+        MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
         TextArea textArea = new TextArea();
         HorizontalLayout layoutRow = new HorizontalLayout();
         Button buttonPrimary = new Button();
@@ -46,8 +50,12 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         formLayout2Col.setWidth("100%");
         textField.setLabel("Nombre del proyecto");
         datePicker.setLabel("Fecha de entrega");
+        multiSelectComboBox.setLabel("Asignar estudiantes");
+        multiSelectComboBox.setWidth("770px");
+        setMultiSelectComboBoxSampleData(multiSelectComboBox);
         textArea.setLabel("Descripción");
         textArea.setWidth("100%");
+        textArea.setHeight("300px");
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
@@ -62,9 +70,23 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         layoutColumn2.add(formLayout2Col);
         formLayout2Col.add(textField);
         formLayout2Col.add(datePicker);
+        layoutColumn2.add(multiSelectComboBox);
         layoutColumn2.add(textArea);
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
+    }
+
+    record SampleItem(String value, String label, Boolean disabled) {
+    }
+
+    private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
+        List<SampleItem> sampleItems = new ArrayList<>();
+        sampleItems.add(new SampleItem("first", "First", null));
+        sampleItems.add(new SampleItem("second", "Second", null));
+        sampleItems.add(new SampleItem("third", "Third", Boolean.TRUE));
+        sampleItems.add(new SampleItem("fourth", "Fourth", null));
+        multiSelectComboBox.setItems(sampleItems);
+        multiSelectComboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
     }
 }

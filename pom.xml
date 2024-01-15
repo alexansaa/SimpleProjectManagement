@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- Project from https://start.vaadin.com/project/c7221a37-5abf-44d5-8fd2-03cb7fc71358 -->
+    <!-- Project from https://start.vaadin.com/project/5f23c082-54d5-4a6d-a045-8ef99baf6bc0 -->
     <groupId>com.example.application</groupId>
     <artifactId>project-management</artifactId>
     <name>project-management</name>
