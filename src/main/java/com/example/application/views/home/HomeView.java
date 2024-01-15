@@ -16,7 +16,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @PageTitle("Home")
-@Route(value = "my-view", layout = MainLayout.class)
+@Route(value = "home", layout = MainLayout.class)
 @AnonymousAllowed
 @Uses(Icon.class)
 public class HomeView extends Composite<VerticalLayout> {

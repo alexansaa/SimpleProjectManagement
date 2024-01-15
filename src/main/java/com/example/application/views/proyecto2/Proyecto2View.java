@@ -27,8 +27,8 @@ import jakarta.annotation.security.RolesAllowed;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-@PageTitle("Proyecto 2")
-@Route(value = "proyecto-usuario", layout = MainLayout.class)
+@PageTitle("tarea")
+@Route(value = "tarea", layout = MainLayout.class)
 @RolesAllowed("USER")
 @Uses(Icon.class)
 public class Proyecto2View extends Composite<VerticalLayout> {

@@ -23,8 +23,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Proyecto 1")
-@Route(value = "home-usuario", layout = MainLayout.class)
-@RolesAllowed("USER")
+@Route(value = "proyecto1", layout = MainLayout.class)
+@RolesAllowed({"ALUMNO", "PROFESOR"})
 @Uses(Icon.class)
 public class Proyecto1View extends Composite<VerticalLayout> {
 
@@ -166,9 +166,8 @@ public class Proyecto1View extends Composite<VerticalLayout> {
     }
 
     private void setMenuBarSampleData(MenuBar menuBar) {
-        menuBar.addItem("View");
-        menuBar.addItem("Edit");
-        menuBar.addItem("Share");
-        menuBar.addItem("Move");
+        menuBar.addItem("Editar");
+        menuBar.addItem("Eliminar");
+        menuBar.addItem("Crear");
     }
 }
