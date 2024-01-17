@@ -1,7 +1,6 @@
 package com.example.application.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class User implements Serializable {
@@ -68,18 +67,6 @@ public class User implements Serializable {
     public void updateProject(Project project, Project newProject) {
         int index = this.projects.indexOf(project);
         this.projects.set(index, newProject);
-    }
-
-    public static List<Object> getObjectsList(List<User> users) {
-        List<Object> myObjects = new ArrayList<>();
-        
-        for (Object obj : users) {
-            if (obj instanceof Object) {
-                myObjects.add((Object) obj);
-            }
-        }
-
-        return myObjects;
     }
 
 
