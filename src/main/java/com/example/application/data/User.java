@@ -1,6 +1,8 @@
 package com.example.application.data;
 
 import java.io.Serializable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class User implements Serializable {
@@ -17,6 +19,8 @@ public class User implements Serializable {
         this.password = password;
         this.role = role;
         this.projects = projects;
+    }
+    public User() {
     }
 
     // Getters and setters

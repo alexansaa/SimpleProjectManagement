@@ -1,5 +1,6 @@
 package com.example.application.views.login;
 
+import com.example.application.data.User;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -29,13 +30,14 @@ import java.util.regex.Pattern;
 @Uses(Icon.class)
 public class LoginView extends Composite<VerticalLayout> {
 
-    private EmailField emailField;
+    private EmailField userField;
     private Select<String> select;
     private PasswordField passwordField;
-
+    public static User usuario = new User();
     public LoginView() {
+        
         H2 h2 = new H2();
-        emailField = new EmailField();
+        userField = new EmailField();
         select = new Select<>();
         passwordField = new PasswordField();
         Button buttonPrimary = new Button("Iniciar Sesión");
@@ -48,8 +50,8 @@ public class LoginView extends Composite<VerticalLayout> {
 
         h2.setText("Inicio de Sesión");
         h2.setWidth("max-content");
-        emailField.setLabel("Email");
-        emailField.setWidth("min-content");
+        userField.setLabel("Usuario");
+        userField.setWidth("min-content");
         select.setLabel("Selecciona el Rol");
         select.setWidth("min-content");
         setSelectSampleData(select);
@@ -58,7 +60,7 @@ public class LoginView extends Composite<VerticalLayout> {
 
         buttonPrimary.addClickListener(e -> authenticateAndNavigate());
 
-        getContent().add(h2, emailField, select, passwordField, buttonPrimary);
+        getContent().add(h2, userField, select, passwordField, buttonPrimary);
     }
 
     private void setSelectSampleData(Select<String> select) {
@@ -70,40 +72,37 @@ public class LoginView extends Composite<VerticalLayout> {
 
     private void authenticateAndNavigate() {
         // This method will be called when the button is clicked
-        String email = emailField.getValue();
+        String user = userField.getValue();
         String rol = select.getValue();
         String contrasena = passwordField.getValue();
 
         // Aquí deberías implementar la lógica para verificar el email, contraseña y rol
         // y dar permisos de vistas en consecuencia.
-        if (isValidEmail(email) && isValidInput(rol) && isValidInput(contrasena)) {
-            if (email.equals("user@gmail.com") && contrasena.equals("user")) {
+        if (isValidInput(rol) && isValidInput(contrasena)) {
+            // Ejemplo de cómo puedes verificar el rol
+            if ("Alumno".equals(rol)) {
+                // Verificar credenciales para alumno
+                // Dar permisos de vistas para alumno
+                // Navigate to "home" route
+                usuario.setUsername(user);
+                usuario.setPassword(contrasena);
+                usuario.setRole(rol);
+                getUI().ifPresent(ui -> ui.navigate("home"));
+                System.out.println("El usuario es: " + usuario.getUsername());
 
-                // Ejemplo de cómo puedes verificar el rol
-                if ("Alumno".equals(rol)) {
-                    // Verificar credenciales para alumno
-                    // Dar permisos de vistas para alumno
-                    // Navigate to "home" route
-                    getUI().ifPresent(ui -> ui.navigate("home"));
-
-                } else if ("Profesor".equals(rol)) {
-                    // Verificar credenciales para profesor
-                    // Dar permisos de vistas para profesor
-                    getUI().ifPresent(ui -> ui.navigate("home"));
-                }
+            } else if ("Profesor".equals(rol)) {
+                // Verificar credenciales para profesor
+                // Dar permisos de vistas para profesor
+                usuario.setUsername(user);
+                usuario.setPassword(contrasena);
+                usuario.setRole(rol);
+                getUI().ifPresent(ui -> ui.navigate("home"));
             }
         } else {
             // Mostrar mensaje de error
             Notification.show("Por favor, completa todos los campos correctamente");
         }
 
-    }
-
-    private boolean isValidEmail(String email) {
-        // Utilizar una expresión regular para verificar el formato del email
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        return pattern.matcher(email).matches();
     }
 
     private boolean isValidInput(String input) {
