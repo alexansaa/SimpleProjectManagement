@@ -19,6 +19,8 @@ public class User implements Serializable {
         this.role = role;
         this.projects = projects;
     }
+    public User() {
+    }
 
     // Getters and setters
     public String getUsername() {
