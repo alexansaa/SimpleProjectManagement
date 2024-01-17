@@ -1,6 +1,7 @@
 package com.example.application.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -144,6 +145,18 @@ public class Project implements Serializable {
                 ", creatorOwner='" + creatorOwner + '\'' +
                 // ", taskList=" + taskList +
                 '}';
+    }
+
+    public static List<Object> getObjectsList(List<Project> projects) {
+        List<Object> myObjects = new ArrayList<>();
+        
+        for (Object obj : projects) {
+            if (obj instanceof Object) {
+                myObjects.add((Object) obj);
+            }
+        }
+
+        return myObjects;
     }
 }
 
