@@ -121,8 +121,12 @@ public class appDataManipulator {
     // Obtenemos usuario dado nombre de usuario o creamos si no existe
     public User getUserByNameData(String userName, String pass, String rol) {
         for(User usr : appUsers) {
-            if(usr.getUsername() == userName) {
+            if(usr.getUsername() == userName && usr.getPassword() == pass && usr.getRole() == rol) {
                 return usr;
+            } else if(usr.getUsername() == userName) {
+                List<Project> emptyList = new ArrayList<>();
+                User wrongUser = new User("", "", "", emptyList);
+                return wrongUser;
             }
         }
 
