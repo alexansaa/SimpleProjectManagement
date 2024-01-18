@@ -1,10 +1,12 @@
 package com.example.application.views.login;
 
 import com.example.application.data.Project;
+import com.example.application.data.Project;
 import com.example.application.data.User;
 import com.example.application.data.appDataManipulator;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -93,6 +95,7 @@ public class LoginView extends Composite<VerticalLayout> {
 
         String user = userField.getValue();
         String rol = select.getValue();
+        System.out.println("El rol es: " + rol);
         String contrasena = passwordField.getValue();
 
         // Aquí deberías implementar la lógica para verificar el email, contraseña y rol
@@ -107,6 +110,8 @@ public class LoginView extends Composite<VerticalLayout> {
             }
             else {
                 getUI().ifPresent(ui -> ui.navigate("home"));
+
+
             }
         } else {
             // Mostrar mensaje de error
