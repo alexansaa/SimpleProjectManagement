@@ -118,6 +118,24 @@ public class appDataManipulator {
         return userProjects;
     }
 
+    // Obtenemos usuario dado nombre de usuario o creamos si no existe
+    public User getUserByNameData(String userName, String pass, String rol) {
+        for(User usr : appUsers) {
+            if(usr.getUsername() == userName && usr.getPassword() == pass && usr.getRole() == rol) {
+                return usr;
+            } else if(usr.getUsername() == userName) {
+                List<Project> emptyList = new ArrayList<>();
+                User wrongUser = new User("", "", "", emptyList);
+                return wrongUser;
+            }
+        }
+
+        List<Project> newProjectList = new ArrayList<>();
+        User newUser = new User(userName, pass, rol, newProjectList);
+        appUsers.add(newUser);
+        return newUser;
+    }
+
     // Datos default
     private List<User> defaultUsers() {
         List<Project> emptyProjList = new ArrayList<>();
