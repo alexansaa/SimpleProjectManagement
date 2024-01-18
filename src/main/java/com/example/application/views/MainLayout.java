@@ -1,12 +1,13 @@
 package com.example.application.views;
 
+import com.example.application.data.Project;
 import com.example.application.data.User;
 import com.example.application.views.crearproyecto.CrearProyectoView;
 import com.example.application.views.creartarea.CrearTareaView;
 import com.example.application.views.home.HomeView;
 import com.example.application.views.login.LoginView;
 import com.example.application.views.nuevocomentario.NuevoComentarioView;
-import com.example.application.views.proyecto1.Proyecto1View;
+import com.example.application.views.proyecto.ProyectoView;
 import com.example.application.views.tarea.TareaView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -26,8 +27,11 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.vaadin.lineawesome.LineAwesomeIcon;
@@ -38,12 +42,15 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
+    private User usuario = LoginView.usuario;
+    private Project project = ProyectoView.project;
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
-        addDrawerContent();
         addHeaderContent();
+        addDrawerContent(usuario, project);
     }
+
 
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
@@ -55,50 +62,34 @@ public class MainLayout extends AppLayout {
         addToNavbar(true, toggle, viewTitle);
     }
 
-    private void addDrawerContent() {
+    private void addDrawerContent(User usuario, Project project) {
         H1 appName = new H1("project-management");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
-        Scroller scroller = new Scroller(createNavigation());
+        Scroller scroller = new Scroller(createNavigation(project));
 
-        addToDrawer(header, scroller, createFooter());
+        addToDrawer(header, scroller, createFooter(usuario));
     }
 
-    private SideNav createNavigation() {
+    private SideNav createNavigation(Project project) {
         SideNav nav = new SideNav();
 
         nav.addItem(new SideNavItem("Login", LoginView.class, LineAwesomeIcon.LOCK_SOLID.create()));
-        
-        nav.addItem(new SideNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create()));
 
-        nav.addItem(
-                new SideNavItem("Proyecto 1", Proyecto1View.class, LineAwesomeIcon.PROJECT_DIAGRAM_SOLID.create()));
 
-        nav.addItem(
-                new SideNavItem("Tarea", TareaView.class, LineAwesomeIcon.PROJECT_DIAGRAM_SOLID.create()));
-
-        nav.addItem(new SideNavItem("Crear Proyecto", CrearProyectoView.class,
-                LineAwesomeIcon.BOOK_OPEN_SOLID.create()));
-
-        nav.addItem(new SideNavItem("Crear Tarea", CrearTareaView.class, LineAwesomeIcon.BOOK_OPEN_SOLID.create()));
-
-        nav.addItem(new SideNavItem("Nuevo Comentario", NuevoComentarioView.class,
-                    LineAwesomeIcon.BOOK_OPEN_SOLID.create()));
+        nav.addItem(new SideNavItem(project.getProjectName(), ProyectoView.class, LineAwesomeIcon.LOCK_SOLID.create()));
 
         return nav;
     }
 
-    private Footer createFooter() {
+    private Footer createFooter(User usuario) {
         Footer layout = new Footer();
     
-        User user = LoginView.usuario;
-        System.out.println("El usuario es: " + user.getUsername());
-    
-        if (user.getUsername() != null) {
-            System.out.println(user.getUsername());
+        if (usuario.getUsername() != null) {
+            System.out.println(usuario.getUsername());
             // Crear el componente de iniciales
-            Avatar avatar = new Avatar(user.getUsername());
+            Avatar avatar = new Avatar(usuario.getUsername());
             avatar.setThemeName("xsmall");
             avatar.getElement().getStyle().set("tabindex", "-1");
     
@@ -109,14 +100,13 @@ public class MainLayout extends AppLayout {
             MenuItem userName = userMenu.addItem("");
             Div div = new Div();
             div.add(avatar);
-            div.add(user.getUsername());
+            div.add(usuario.getUsername());
             div.add(new Icon("lumo", "dropdown"));
             div.getElement().getStyle().set("display", "flex");
             div.getElement().getStyle().set("align-items", "center");
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
             userName.getSubMenu().addItem("Sign out", e -> {
-                LoginView.usuario = new User();
                 getUI().ifPresent(ui -> ui.navigate("login"));
             });
     
