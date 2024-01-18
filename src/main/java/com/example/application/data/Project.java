@@ -1,6 +1,7 @@
 package com.example.application.data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,8 +10,8 @@ public class Project implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String projectName;
-    private Date creationDate;
-    private Date dueDate;
+    private LocalDate creationDate;
+    private LocalDate dueDate;
     private String description;
     private int numberOfTasks;
     private List<User> assignedUsers;
@@ -18,7 +19,7 @@ public class Project implements Serializable {
     private List<Task> taskList;
 
     // Constructor
-    public Project(String projectName, Date creationDate, Date dueDate, String description,
+    public Project(String projectName, LocalDate creationDate, LocalDate dueDate, String description,
                    int numberOfTasks, List<User> assignedUsers, User creatorOwner, List<Task> taskList) {
         this.projectName = projectName;
         this.creationDate = creationDate;
@@ -30,16 +31,19 @@ public class Project implements Serializable {
         this.taskList = taskList;
     }
 
+    public Project(){
+    }
+
     // Getters
     public String getProjectName() {
         return projectName;
     }
 
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
@@ -68,11 +72,11 @@ public class Project implements Serializable {
         this.projectName = projectName;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
