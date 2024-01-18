@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Inicio")
-@Route(value = "login")
+@Route(value = " ")
 @RouteAlias(value = "")
 @AnonymousAllowed
 @Uses(Icon.class)
