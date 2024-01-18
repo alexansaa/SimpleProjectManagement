@@ -1,17 +1,17 @@
 package com.example.application.data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Comment implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private User owner;
     private String text;
-    private Date commentDate;
+    private LocalDate commentDate;
 
     // Constructor
-    public Comment(User owner, String text, Date commentDate) {
+    public Comment(User owner, String text, LocalDate commentDate) {
         this.owner = owner;
         this.text = text;
         this.commentDate = commentDate;
@@ -26,7 +26,7 @@ public class Comment implements Serializable {
         return text;
     }
 
-    public Date getCommentDate() {
+    public LocalDate getCommentDate() {
         return commentDate;
     }
 
@@ -39,7 +39,7 @@ public class Comment implements Serializable {
         this.text = text;
     }
 
-    public void setCommentDate(Date commentDate) {
+    public void setCommentDate(LocalDate commentDate) {
         this.commentDate = commentDate;
     }
 

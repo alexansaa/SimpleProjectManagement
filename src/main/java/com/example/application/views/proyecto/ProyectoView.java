@@ -1,14 +1,13 @@
-package com.example.application.views.proyecto1;
+package com.example.application.views.proyecto;
 
+import com.example.application.data.Project;
+import com.example.application.data.Task;
+import com.example.application.data.User;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.Uses;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -21,12 +20,44 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
-@PageTitle("Proyecto 1")
-@Route(value = "proyecto1", layout = MainLayout.class)
-@Uses(Icon.class)
-public class Proyecto1View extends Composite<VerticalLayout> {
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public Proyecto1View() {
+@PageTitle("Proyecto")
+@Route(value = "proyecto", layout = MainLayout.class)
+@Uses(Icon.class)
+public class ProyectoView extends Composite<VerticalLayout> {
+    // Crear un objeto de ejemplo de la clase User para asignar al creador y a los usuarios asignados
+    public static User creatorOwner = new User("Juan Pérez", "password123", "Administrador", new ArrayList<>());
+    public static User user1 = new User("Pedro", "pass456", "Usuario", new ArrayList<>());
+    public static User user2 = new User("Jose", "pass789", "Usuario", new ArrayList<>());
+    
+    // Crear un objeto de ejemplo de la clase Task
+    public static Task task1 = new Task("Tarea 1", "Descripción de la tarea 1", LocalDate.now(), List.of(user1, user2), "En Progreso", new ArrayList<>());
+    public static Task task2 = new Task("Tarea 2", "Descripción de la tarea 2", LocalDate.now(), List.of(user2), "Completada", new ArrayList<>());
+
+    // Lista de usuarios asignados
+    public static List<User> assignedUsers = List.of(user1, user2);
+
+    // Lista de tareas del proyecto
+    public static List<Task> taskList = List.of(task1, task2);
+
+    // Crear un objeto de ejemplo de la clase Project
+    public static Project project = new Project(
+            "Proyecto Ejemplo",
+            LocalDate.of(2024, 1, 11),  // Fecha de creación
+            LocalDate.of(2024, 1, 25),  // Fecha de entrega
+            "Descripción del proyecto de ejemplo",
+            2,  // Número de tareas
+            assignedUsers,
+            creatorOwner,
+            taskList
+    );
+    
+    public ProyectoView() {
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
@@ -78,7 +109,7 @@ public class Proyecto1View extends Composite<VerticalLayout> {
         layoutRow2.setHeight("160px");
         layoutRow2.setAlignItems(Alignment.START);
         layoutRow2.setJustifyContentMode(JustifyContentMode.START);
-        h2.setText("Proyecto 1");
+        h2.setText(project.getProjectName());
         layoutRow2.setAlignSelf(FlexComponent.Alignment.CENTER, h2);
         h2.setWidth("800px");
         layoutColumn4.setHeightFull();
@@ -88,28 +119,29 @@ public class Proyecto1View extends Composite<VerticalLayout> {
         layoutColumn4.setHeight("85px");
         layoutColumn4.setJustifyContentMode(JustifyContentMode.START);
         layoutColumn4.setAlignItems(Alignment.END);
-        h4.setText("Estado: Activo");
+        h4.setText("Estado: ");
         layoutColumn4.setAlignSelf(FlexComponent.Alignment.END, h4);
         h4.setWidth("max-content");
         h4.setHeight("1000px");
-        h42.setText("Fecha de creación: 11/01/2024");
+        h42.setText("Fecha de creación: " + project.getCreationDate().toString());
         h42.setWidth("max-content");
-        h43.setText("Fecha de entrega: 25/01/2024");
+        h43.setText("Fecha de entrega: " + project.getDueDate().toString());
         h43.setWidth("max-content");
         h43.setHeight("10px");
-        h44.setText("# Tareas: 2");
+        h44.setText("# Tareas: " + project.getNumberOfTasks());
         h44.setWidth("max-content");
         h44.setHeight("10px");
-        h45.setText("Creado por: Juan Pérez");
+        h45.setText("Creado por: " + project.getCreatorOwner().getUsername());
         h45.setWidth("max-content");
-        h46.setText("Asignado a: Pedro, Jose, Roberto");
+        h46.setText("Asignado a: " + project.getAssignedUsers().stream()
+                .map(User::getUsername) // Suponiendo que hay un método getUsername() en la clase User
+                .collect(Collectors.joining(", ")));
         h46.setWidth("max-content");
         hr.setHeight("1px");
         h3.setText("Descripción");
         layoutColumn3.setAlignSelf(FlexComponent.Alignment.START, h3);
         h3.setWidth("max-content");
-        textMedium.setText(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+        textMedium.setText(project.getDescription());
         textMedium.setWidth("100%");
         textMedium.setHeight("52px");
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");

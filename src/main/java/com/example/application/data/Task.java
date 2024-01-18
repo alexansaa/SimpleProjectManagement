@@ -1,21 +1,23 @@
 package com.example.application.data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.cglib.core.Local;
 
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String taskName;
     private String description;
-    private Date creationDate;
+    private LocalDate creationDate;
     private List<User> assignedUsers;
     private String taskStatus;
     private List<Comment> comments;
 
     // Constructor
-    public Task(String taskName, String description, Date creationDate,
+    public Task(String taskName, String description, LocalDate creationDate,
                 List<User> assignedUsers, String taskStatus, List<Comment> comments) {
         this.taskName = taskName;
         this.description = description;
@@ -34,7 +36,7 @@ public class Task implements Serializable {
         return description;
     }
 
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
@@ -59,7 +61,7 @@ public class Task implements Serializable {
         this.description = description;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 

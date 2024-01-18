@@ -7,9 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class appDataManipulator {
@@ -51,8 +50,7 @@ public class appDataManipulator {
 
     // Metodos estaticos
     // escritura, creacion de archivos serializados dado un arreglo de objetos y un path
-    private boolean writeSerializedFile(List<Object> objetos,String pathArchivo){
-        boolean b = false;
+    private void writeSerializedFile(List<Object> objetos,String pathArchivo){
         ObjectOutputStream fileOut;
         FileOutputStream fos;
         try{
@@ -62,44 +60,32 @@ public class appDataManipulator {
                 fileOut.writeObject(objeto);
             }
             fileOut.close();
-            b = true;
         }catch(IOException e){
-//            System.out.println("Error: " + e.getMessage());
-//            System.out.println(e.initCause(e));
+            System.out.println("Error: " + e.getMessage());
+            System.out.println(e.initCause(e));
             e.printStackTrace();
         }
-        return b;
     }
     
     // Leectura archivos serializados dado path
-    private List<Object> readSerializedFile(String pathArchivo){
-        List<Object> arryList = new ArrayList<>();
-        FileInputStream fis;
-        ObjectInputStream fileIn = null;
-        try{
-            fis = new FileInputStream(pathArchivo);
-            fileIn = new ObjectInputStream(fis);
-            Object someObject = null;
-            
-            do{
-                someObject = (Object)fileIn.readObject();
-                if(someObject != null){
-                    arryList.add(someObject);
-                }
-            }while(someObject != null);
-            System.out.println();
-            fileIn.close();
-        }catch (FileNotFoundException e) {
-            System.out.println("El archivo no existe: " + e.getMessage());
-        }catch(EOFException e){
-            
-        }catch(IOException e){
-            System.out.println("readSerializedFile IOException: " + e.getMessage() + e.toString());
-        }catch(ClassNotFoundException e){
-            System.out.println("ClassNotfound " + e.getMessage());
+    public List<Object> readSerializedFile(String pathArchivo) {
+    List<Object> arryList = new ArrayList<>();
+
+    try (ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(pathArchivo))) {
+        Object someObject = fileIn.readObject();
+        if (someObject instanceof List<?>) {
+            arryList = (List<Object>) someObject;
         }
-        return arryList;
+    } catch (FileNotFoundException e) {
+        System.out.println("El archivo no existe: " + e.getMessage());
+        writeSerializedFile(arryList, pathArchivo);
+    } catch (IOException | ClassNotFoundException e) {
+        System.out.println("Error al leer el archivo serializado: " + e.getMessage());
+        e.printStackTrace();
     }
+    return arryList;
+}
+
 
     // Metodos para preservacion de datos
     public void saveData() {
@@ -111,7 +97,7 @@ public class appDataManipulator {
     public List<Project> getUserProjects(User user) {
         List<Project> userProjects = new ArrayList<>();
         for (Project proj : appProjects) {
-            if (proj.getAssignedUsers().indexOf(user) != 0) {
+            if (proj.getAssignedUsers().indexOf(user) >= 0) {
                 userProjects.add(proj);
             }
         }
@@ -137,7 +123,7 @@ public class appDataManipulator {
     }
 
     // Datos default
-    private List<User> defaultUsers() {
+    public List<User> defaultUsers() {
         List<Project> emptyProjList = new ArrayList<>();
         User user1 = new User("Usuario1", "Pass1", "Profesor", emptyProjList);
         User user2 = new User("Usuario2", "Pass1", "Estudiante", emptyProjList);
@@ -149,10 +135,10 @@ public class appDataManipulator {
 
     private List<Comment> defaultComments() {
         List<User> myUsers = defaultUsers();
-        Comment comment1 = new Comment(myUsers.get(0),"Comentario1", new Date());
-        Comment comment2 = new Comment(myUsers.get(1),"Comentario2", new Date());
-        Comment comment3 = new Comment(myUsers.get(0),"Comentario3", new Date());
-        Comment comment4 = new Comment(myUsers.get(1),"Comentario4", new Date());
+        Comment comment1 = new Comment(myUsers.get(0),"Comentario1", LocalDate.now());
+        Comment comment2 = new Comment(myUsers.get(1),"Comentario2", LocalDate.now());
+        Comment comment3 = new Comment(myUsers.get(0),"Comentario3", LocalDate.now());
+        Comment comment4 = new Comment(myUsers.get(1),"Comentario4", LocalDate.now());
 
         List<Comment> myComments = new ArrayList<>();
         myComments.add(comment1);
@@ -174,8 +160,8 @@ public class appDataManipulator {
         estudiantes.add(myUsers.get(1));
 
 
-        Task task1 = new Task("Tarea 1", "Esta descripcion describe la tarea", new Date(), estudiantes, "Done", myComments);
-        Task task2 = new Task("Tarea 2", "Esta descripcion describe la tarea", new Date(), estudiantes, "Done", myComments);
+        Task task1 = new Task("Tarea 1", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
+        Task task2 = new Task("Tarea 2", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
 
         List<Task> myTasks = new ArrayList<>();
         myTasks.add(task1);
@@ -190,14 +176,7 @@ public class appDataManipulator {
 
         User profesor = myUsers.get(0);
 
-        // fecha futura
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DAY_OF_MONTH, 4);
-        Date futureDate = calendar.getTime();
-
-        Project myProject = new Project("Project 1", new Date(), futureDate, "Este es un proyecto genial!", myTasks.size(), myUsers, profesor, myTasks);
+        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", myTasks.size(), myUsers, profesor, myTasks);
 
         List<Project> myProjects = new ArrayList<>();
         myProjects.add(myProject);

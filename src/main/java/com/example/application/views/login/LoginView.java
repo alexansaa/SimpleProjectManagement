@@ -1,8 +1,11 @@
 package com.example.application.views.login;
 
+import com.example.application.data.Project;
 import com.example.application.data.User;
+import com.example.application.data.appDataManipulator;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
@@ -21,19 +24,28 @@ import com.vaadin.flow.component.notification.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @PageTitle("Inicio")
-@Route(value = "login", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
+@Route(value = "login")
+@RouteAlias(value = "")
 @AnonymousAllowed
 @Uses(Icon.class)
+
+
+
 public class LoginView extends Composite<VerticalLayout> {
+    
+    public static List<Project> emptyProjList = new ArrayList<>();
+    public static User usuario = new User("Pablo Arcos", "Pass1", "Profesor", emptyProjList);
+
+    public static User getUsuario() {
+        return usuario;
+    }
 
     private EmailField userField;
     private Select<String> select;
     private PasswordField passwordField;
-    public static User usuario = new User();
+    //public static User usuario = new User();
     public LoginView() {
         
         H2 h2 = new H2();
@@ -70,15 +82,25 @@ public class LoginView extends Composite<VerticalLayout> {
         select.setItems(roles);
     }
 
+    // Instanciamos el manipulador de datos y el main layout
+    appDataManipulator manipulator = new appDataManipulator("Users.data", "Projects.data");
+
+    
+
+    
+
     private void authenticateAndNavigate() {
-        // This method will be called when the button is clicked
+        // Verificar las credenciales usando appDataManipulator        
+
         String user = userField.getValue();
         String rol = select.getValue();
+        System.out.println("El rol es: " + rol);
         String contrasena = passwordField.getValue();
 
         // Aquí deberías implementar la lógica para verificar el email, contraseña y rol
         // y dar permisos de vistas en consecuencia.
         if (isValidInput(rol) && isValidInput(contrasena)) {
+
             // Ejemplo de cómo puedes verificar el rol
             if ("Alumno".equals(rol)) {
                 // Verificar credenciales para alumno
@@ -88,15 +110,18 @@ public class LoginView extends Composite<VerticalLayout> {
                 usuario.setPassword(contrasena);
                 usuario.setRole(rol);
                 getUI().ifPresent(ui -> ui.navigate("home"));
-                System.out.println("El usuario es: " + usuario.getUsername());
+                System.out.println("Entro a alumno: " + usuario.getUsername());
 
             } else if ("Profesor".equals(rol)) {
                 // Verificar credenciales para profesor
                 // Dar permisos de vistas para profesor
-                usuario.setUsername(user);
-                usuario.setPassword(contrasena);
-                usuario.setRole(rol);
+     
+                System.out.println("Entro a profesor: " );
+
+                
                 getUI().ifPresent(ui -> ui.navigate("home"));
+
+
             }
         } else {
             // Mostrar mensaje de error
