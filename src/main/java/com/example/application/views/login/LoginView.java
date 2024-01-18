@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Inicio")
-@Route(value = " ")
+@Route(value = "login")
 @RouteAlias(value = "")
 @AnonymousAllowed
 @Uses(Icon.class)
@@ -35,8 +35,7 @@ import java.util.List;
 
 public class LoginView extends Composite<VerticalLayout> {
     
-    public static List<Project> emptyProjList = new ArrayList<>();
-    public static User usuario = new User("Pablo Arcos", "Pass1", "Profesor", emptyProjList);
+    public static User usuario = new User();
 
     public static User getUsuario() {
         return usuario;
@@ -94,34 +93,20 @@ public class LoginView extends Composite<VerticalLayout> {
 
         String user = userField.getValue();
         String rol = select.getValue();
-        System.out.println("El rol es: " + rol);
         String contrasena = passwordField.getValue();
 
         // Aquí deberías implementar la lógica para verificar el email, contraseña y rol
         // y dar permisos de vistas en consecuencia.
-        if (isValidInput(rol) && isValidInput(contrasena)) {
+        if (isValidInput(rol) && isValidInput(contrasena) && isValidInput(user)) {
 
-            // Ejemplo de cómo puedes verificar el rol
-            if ("Alumno".equals(rol)) {
-                // Verificar credenciales para alumno
-                // Dar permisos de vistas para alumno
-                // Navigate to "home" route
-                usuario.setUsername(user);
-                usuario.setPassword(contrasena);
-                usuario.setRole(rol);
+            usuario = manipulator.getUserByNameData(user, contrasena, rol);
+
+            if (usuario.getUsername() == "") {
+                Notification.show("Credenciales incorrectas, por favor intente de nuevo.");
+                return;
+            }
+            else {
                 getUI().ifPresent(ui -> ui.navigate("home"));
-                System.out.println("Entro a alumno: " + usuario.getUsername());
-
-            } else if ("Profesor".equals(rol)) {
-                // Verificar credenciales para profesor
-                // Dar permisos de vistas para profesor
-     
-                System.out.println("Entro a profesor: " );
-
-                
-                getUI().ifPresent(ui -> ui.navigate("home"));
-
-
             }
         } else {
             // Mostrar mensaje de error

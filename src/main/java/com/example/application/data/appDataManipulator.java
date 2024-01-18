@@ -110,9 +110,13 @@ public class appDataManipulator {
             if(usr.getUsername() == userName && usr.getPassword() == pass && usr.getRole() == rol) {
                 return usr;
             } else if(usr.getUsername() == userName) {
-                List<Project> emptyList = new ArrayList<>();
-                User wrongUser = new User("", "", "", emptyList);
-                return wrongUser;
+                if (usr.getPassword() != pass || usr.getRole() != rol) {
+                    // Usuario existe pero contraseña incorrecta
+                    List<Project> emptyList = new ArrayList<>();
+                    User wrongUser = new User("", "", "", emptyList);
+                    return wrongUser;
+                }
+        
             }
         }
 
