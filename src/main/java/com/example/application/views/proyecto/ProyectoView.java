@@ -22,7 +22,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,34 +29,12 @@ import java.util.stream.Collectors;
 @Route(value = "proyecto", layout = MainLayout.class)
 @Uses(Icon.class)
 public class ProyectoView extends Composite<VerticalLayout> {
-    // Crear un objeto de ejemplo de la clase User para asignar al creador y a los usuarios asignados
-    public static User creatorOwner = new User("Juan Pérez", "password123", "Administrador", new ArrayList<>());
-    public static User user1 = new User("Pedro", "pass456", "Usuario", new ArrayList<>());
-    public static User user2 = new User("Jose", "pass789", "Usuario", new ArrayList<>());
-    
-    // Crear un objeto de ejemplo de la clase Task
-    public static Task task1 = new Task("Tarea 1", "Descripción de la tarea 1", LocalDate.now(), List.of(user1, user2), "En Progreso", new ArrayList<>());
-    public static Task task2 = new Task("Tarea 2", "Descripción de la tarea 2", LocalDate.now(), List.of(user2), "Completada", new ArrayList<>());
-
-    // Lista de usuarios asignados
-    public static List<User> assignedUsers = List.of(user1, user2);
-
-    // Lista de tareas del proyecto
-    public static List<Task> taskList = List.of(task1, task2);
-
-    // Crear un objeto de ejemplo de la clase Project
-    public static Project project = new Project(
-            "Proyecto Ejemplo",
-            LocalDate.of(2024, 1, 11),  // Fecha de creación
-            LocalDate.of(2024, 1, 25),  // Fecha de entrega
-            "Descripción del proyecto de ejemplo",
-            2,  // Número de tareas
-            assignedUsers,
-            creatorOwner,
-            taskList
-    );
+    // Variable Proyecto para mostrar detalles
+    public static Project project = MainLayout.project;
     
     public ProyectoView() {
+        
+
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();

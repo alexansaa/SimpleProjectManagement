@@ -30,6 +30,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,15 +41,18 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
  * The main view is a top-level placeholder for other views.
  */
 public class MainLayout extends AppLayout {
-
     private H2 viewTitle;
     private User usuario = LoginView.usuario;
-    private Project project = ProyectoView.project;
+    // public Project project = new Project("Proj name", LocalDate.now(), LocalDate.now(), "My desc", new ArrayList(), usuario, new ArrayList());
+    public static Project project = new Project();
 
     public MainLayout() {
+        // usuario.addProject(project);
+        System.out.println(usuario.getProjects());
+        System.out.println("My usuario actual: " + usuario);
         setPrimarySection(Section.DRAWER);
         addHeaderContent();
-        addDrawerContent(usuario, project);
+        addDrawerContent(usuario, usuario.getProjects());
     }
 
 
@@ -62,24 +66,25 @@ public class MainLayout extends AppLayout {
         addToNavbar(true, toggle, viewTitle);
     }
 
-    private void addDrawerContent(User usuario, Project project) {
+    private void addDrawerContent(User usuario, List<Project> projects) {
         H1 appName = new H1("project-management");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
-        Scroller scroller = new Scroller(createNavigation(project));
+        Scroller scroller = new Scroller(createNavigation(projects));
 
         addToDrawer(header, scroller, createFooter(usuario));
     }
 
-    private SideNav createNavigation(Project project) {
+    private SideNav createNavigation(List<Project> projects) {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Login", LoginView.class, LineAwesomeIcon.LOCK_SOLID.create()));
-
-
-        nav.addItem(new SideNavItem(project.getProjectName(), ProyectoView.class, LineAwesomeIcon.LOCK_SOLID.create()));
-
+        // nav.addItem(new SideNavItem("Login", LoginView.class, LineAwesomeIcon.LOCK_SOLID.create()));
+        for (Project proj : projects) {
+            System.out.println("Entramos al for" + proj);
+            project = proj;
+            nav.addItem(new SideNavItem(proj.getProjectName(), ProyectoView.class, LineAwesomeIcon.LOCK_SOLID.create()));
+        }
         return nav;
     }
 

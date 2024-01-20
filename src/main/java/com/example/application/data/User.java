@@ -2,17 +2,15 @@ package com.example.application.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
 public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     private String username;
     private String password;
     private String role;
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
     // Constructor
     public User(String username, String password, String role, List<Project> projects) {
@@ -93,7 +91,7 @@ public class User implements Serializable {
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
-                // ", projects=" + Arrays.toString(projects) +
+                ", projects=" + projects.size() +
                 '}';
     }
 }

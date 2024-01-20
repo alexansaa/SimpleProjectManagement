@@ -3,30 +3,27 @@ package com.example.application.data;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Project implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     private String projectName;
     private LocalDate creationDate;
     private LocalDate dueDate;
     private String description;
-    private int numberOfTasks;
-    private List<User> assignedUsers;
+    private List<User> assignedUsers = new ArrayList<>();
     private User creatorOwner;
-    private List<Task> taskList;
+    private List<Task> taskList = new ArrayList<>();
 
     // Constructor
     public Project(String projectName, LocalDate creationDate, LocalDate dueDate, String description,
-                   int numberOfTasks, List<User> assignedUsers, User creatorOwner, List<Task> taskList) {
+        List<User> assignedUsers, User creatorOwner, List<Task> taskList) {
         this.projectName = projectName;
         this.creationDate = creationDate;
         this.dueDate = dueDate;
         this.description = description;
-        this.numberOfTasks = numberOfTasks;
-        this.assignedUsers = assignedUsers;
+        for (User usr : assignedUsers) {
+            this.addAssignedUser(usr);
+        }
         this.creatorOwner = creatorOwner;
         this.taskList = taskList;
     }
@@ -52,7 +49,7 @@ public class Project implements Serializable {
     }
 
     public int getNumberOfTasks() {
-        return numberOfTasks;
+        return this.taskList.size();
     }
 
     public List<User> getAssignedUsers() {
@@ -84,10 +81,6 @@ public class Project implements Serializable {
         this.description = description;
     }
 
-    public void setNumberOfTasks(int numberOfTasks) {
-        this.numberOfTasks = numberOfTasks;
-    }
-
     public void setAssignedUsers(List<User> assignedUsers) {
         this.assignedUsers = assignedUsers;
     }
@@ -97,7 +90,18 @@ public class Project implements Serializable {
     }
 
     public void addAssignedUser(User user) {
-        this.assignedUsers.add(user);
+        System.out.println("user on assigned users list?: " + this.assignedUsers.indexOf(user));
+        if (this.assignedUsers.indexOf(user) == -1) {
+            System.out.println("Asignando usuario al proyecto" + user);
+            this.assignedUsers.add(user);
+        }
+        System.out.println("project on users projects list?: " + user.getProjects().indexOf(this));
+        if (user.getProjects().indexOf(this) == -1) {
+            System.out.println("Asignando proyecto al usuario" + this);
+            user.addProject(this);
+        }
+        System.out.println(this.assignedUsers);
+        System.out.println(user.getProjects());
     }
 
     public void updateAssignedUser(User user, User newUser) {
@@ -144,7 +148,7 @@ public class Project implements Serializable {
                 ", creationDate=" + creationDate +
                 ", dueDate=" + dueDate +
                 ", description='" + description + '\'' +
-                ", numberOfTasks=" + numberOfTasks +
+                ", numberOfTasks=" + this.taskList.size() +
                 ", assignedUsers=" + assignedUsers +
                 ", creatorOwner='" + creatorOwner + '\'' +
                 // ", taskList=" + taskList +
