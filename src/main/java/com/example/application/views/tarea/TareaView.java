@@ -27,9 +27,8 @@ import jakarta.annotation.security.RolesAllowed;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-@PageTitle("tarea")
+@PageTitle("Tarea")
 @Route(value = "tarea", layout = MainLayout.class)
-@RolesAllowed("USER")
 @Uses(Icon.class)
 public class TareaView extends Composite<VerticalLayout> {
 

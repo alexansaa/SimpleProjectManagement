@@ -75,9 +75,6 @@ public class MainLayout extends AppLayout {
     private SideNav createNavigation(Project project) {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Login", LoginView.class, LineAwesomeIcon.LOCK_SOLID.create()));
-
-
         nav.addItem(new SideNavItem(project.getProjectName(), ProyectoView.class, LineAwesomeIcon.LOCK_SOLID.create()));
 
         return nav;
