@@ -29,6 +29,7 @@ public class appDataManipulator {
         for (Object obj : serializedUsers) {
             if (obj instanceof User) {
                 appUsers.add((User) obj);
+                System.out.println((User) obj);
             }
         }
 
@@ -37,22 +38,17 @@ public class appDataManipulator {
         for (Object obj : serializedProjects) {
             if (obj instanceof Project) {
                 appProjects.add((Project) obj);
+                System.out.println((Project) obj);
             }
         }
 
         // Verificacion de existencia de datos
-        if (appUsers.size() == 0) {
-            System.out.println("No hay usuarios");
-            appUsers = defaultUsers();
-        } else {
-            System.out.println("Si hay usuarios");
-        }
-
-        if (appProjects.size() == 0) {
-            System.out.println("No hay proyectos");
-            appProjects = defaultProjects();
-        } else {
-            System.out.println("Si hay proyectos");
+        if (appUsers.size() == 0 || appProjects.size() == 0) {
+            List<Object> mockData = mockData();
+            List<User> myAppUsers = (List<User>)mockData.get(0);
+            List<Project> myAppProjects = (List<Project>)mockData.get(1);
+            appUsers = myAppUsers;
+            appProjects = myAppProjects;
         }
 
         this.saveData();
@@ -113,12 +109,19 @@ public class appDataManipulator {
         writeSerializedFile(Project.getObjectsList(appProjects), projectsPath);
     }
 
-    // Obtenemos proyectos pertenecientes a un usuario'
+    // Obtenemos proyectos pertenecientes a un usuario
     public List<Project> getUserProjects(User user) {
         List<Project> userProjects = new ArrayList<>();
         for (Project proj : appProjects) {
-            if (proj.getAssignedUsers().indexOf(user) >= 0) {
+            if (proj.getCreatorOwner().getUsername() == user.getUsername()) {
                 userProjects.add(proj);
+            } else {
+                List<User> projectAssignedUsers = proj.getAssignedUsers();
+                for (User assignedUser : projectAssignedUsers) {
+                    if (assignedUser.getUsername() == user.getUsername()) {
+                        userProjects.add(proj);
+                    }
+                }
             }
         }
         return userProjects;
@@ -127,83 +130,72 @@ public class appDataManipulator {
     // Obtenemos usuario dado nombre de usuario o creamos si no existe
     public User getUserByNameData(String userName, String pass, String rol) {
         for(User usr : appUsers) {
-            if(usr.getUsername() == userName && usr.getPassword() == pass && usr.getRole() == rol) {
+            System.out.println("comparacion de usuario: " + usr);
+            System.out.println("Datos: " + userName + " " + pass + " " + rol);
+            System.out.println("Comparaciones: " + usr.getUsername().equals(userName) + " " + usr.getPassword().equals(pass) + " " + usr.getRole().equals(rol));
+            System.out.println("Typos de Comparaciones: " + (usr.getUsername().getClass().getSimpleName()) + " " + (usr.getPassword().getClass().getSimpleName()) + " " + (usr.getRole().getClass().getSimpleName()));
+            System.out.println("Typos de datos: " + userName.getClass().getSimpleName() + " " + pass.getClass().getSimpleName() + " " + rol.getClass().getSimpleName());
+            
+            if(usr.getUsername().equals(userName) && usr.getPassword().equals(pass) && usr.getRole().equals(rol)) {
+                System.out.println("Usuario encontrado");
                 return usr;
-            } else if(usr.getUsername() == userName) {
-                if (usr.getPassword() != pass || usr.getRole() != rol) {
-                    // Usuario existe pero contraseña incorrecta
-                    List<Project> emptyList = new ArrayList<>();
-                    User wrongUser = new User("", "", "", emptyList);
-                    return wrongUser;
-                }
-        
+            } else {
+                System.out.println("Datos de usuario incorrectos");
+                // Usuario existe pero datos incorrectos
+                List<Project> emptyList = new ArrayList<>();
+                User wrongUser = new User("", "", "", emptyList);
+                return wrongUser;
             }
         }
 
+        System.out.println("Creando nuevo usuario");
         List<Project> newProjectList = new ArrayList<>();
         User newUser = new User(userName, pass, rol, newProjectList);
         appUsers.add(newUser);
         return newUser;
     }
 
-    // Datos default
-    public List<User> defaultUsers() {
-        List<Project> emptyProjList = new ArrayList<>();
-        User user1 = new User("Usuario1", "Pass1", "Profesor", emptyProjList);
-        User user2 = new User("Usuario2", "Pass1", "Estudiante", emptyProjList);
+    private List<Object> mockData() {
+        // Creo usuarios
+        List<Project> projects = new ArrayList<>();
+        User user1 = new User("Usuario1", "Pass1", "Profesor", projects);
+        User user2 = new User("Usuario2", "Pass1", "Estudiante", projects);
         List<User> myUsers = new ArrayList<>();
         myUsers.add(user1);
         myUsers.add(user2);
-        return myUsers;
-    }
+        List<User> estudiantes = new ArrayList<>();
+        estudiantes.add(user2);
+        User profesor = user1;
 
-    private List<Comment> defaultComments() {
-        List<User> myUsers = defaultUsers();
+        // Creo Comentarios
         Comment comment1 = new Comment(myUsers.get(0),"Comentario1", LocalDate.now());
         Comment comment2 = new Comment(myUsers.get(1),"Comentario2", LocalDate.now());
         Comment comment3 = new Comment(myUsers.get(0),"Comentario3", LocalDate.now());
         Comment comment4 = new Comment(myUsers.get(1),"Comentario4", LocalDate.now());
-
         List<Comment> myComments = new ArrayList<>();
         myComments.add(comment1);
         myComments.add(comment2);
         myComments.add(comment3);
         myComments.add(comment4);
 
-        return myComments;
-    }
-
-    private List<Task> defaultTasks() {
-        List<User> myUsers = defaultUsers();
-        List<Comment> myComments = defaultComments();
-
-        List<User> profesores = new ArrayList<>();
-        profesores.add(myUsers.get(0));
-
-        List<User> estudiantes = new ArrayList<>();
-        estudiantes.add(myUsers.get(1));
-
+        // Creo tareas
         Task task1 = new Task("Tarea 1", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
         Task task2 = new Task("Tarea 2", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
-
         List<Task> myTasks = new ArrayList<>();
         myTasks.add(task1);
         myTasks.add(task2);
 
-        return myTasks;
-    }
-
-    private List<Project> defaultProjects() {
-        List<Task> myTasks = defaultTasks();
-
-        User profesor = appUsers.get(0);
-
-        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", appUsers, profesor, myTasks);
+        // Creo Proyecto
+        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", estudiantes, profesor, myTasks);
 
         List<Project> myProjects = new ArrayList<>();
         myProjects.add(myProject);
 
-        return myProjects;
+        List<Object> mockDataArrays = new ArrayList<>();
+        mockDataArrays.add(myUsers);
+        mockDataArrays.add(myProjects);
+
+        return mockDataArrays;
     }
     
 }
