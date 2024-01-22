@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.Comment;
-import org.springframework.stereotype.Component;
 
 
-@Component
 public class Project implements Serializable {
     private String projectName;
     private LocalDate creationDate;
@@ -26,11 +24,11 @@ public class Project implements Serializable {
         this.creationDate = creationDate;
         this.dueDate = dueDate;
         this.description = description;
+        this.creatorOwner = creatorOwner;
+        this.taskList = taskList;
         for (User usr : assignedUsers) {
             this.addAssignedUser(usr);
         }
-        this.creatorOwner = creatorOwner;
-        this.taskList = taskList;
     }
 
     public Project(){
@@ -95,18 +93,25 @@ public class Project implements Serializable {
     }
 
     public void addAssignedUser(User user) {
-        System.out.println("user on assigned users list?: " + this.assignedUsers.indexOf(user));
-        if (this.assignedUsers.indexOf(user) == -1) {
-            System.out.println("Asignando usuario al proyecto" + user);
+        boolean usrExists = false;
+        for (User usr : assignedUsers) {
+            if (usr.getUsername() == user.getUsername()) {
+                usrExists = true;
+            }
+        }
+        if (!usrExists) {
             this.assignedUsers.add(user);
         }
-        System.out.println("project on users projects list?: " + user.getProjects().indexOf(this));
-        if (user.getProjects().indexOf(this) == -1) {
-            System.out.println("Asignando proyecto al usuario" + this);
+
+        boolean prjExists = false;
+        for (Project prj : user.getProjects()){
+            if (prj.getProjectName() == this.projectName) {
+                prjExists = true;
+            }
+        }
+        if (!prjExists) {
             user.addProject(this);
         }
-        System.out.println(this.assignedUsers);
-        System.out.println(user.getProjects());
     }
 
     public void updateAssignedUser(User user, User newUser) {
