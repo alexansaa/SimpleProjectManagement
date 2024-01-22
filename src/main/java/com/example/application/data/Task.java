@@ -7,8 +7,6 @@ import java.util.List;
 import org.springframework.cglib.core.Local;
 
 public class Task implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     private String taskName;
     private String description;
     private LocalDate creationDate;

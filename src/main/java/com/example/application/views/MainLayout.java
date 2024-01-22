@@ -20,19 +20,26 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import com.vaadin.flow.component.button.Button;
+
 
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
@@ -40,17 +47,24 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
  * The main view is a top-level placeholder for other views.
  */
 public class MainLayout extends AppLayout {
-
     private H2 viewTitle;
     private User usuario = LoginView.usuario;
-    private Project project = ProyectoView.project;
+    public Project project1 = new Project("Proj name", LocalDate.now(), LocalDate.now(), "My desc", new ArrayList(),
+            usuario, new ArrayList());
+    public Project project2 = new Project("Proj 2", LocalDate.now(), LocalDate.now(), "My desc 2", new ArrayList(),
+            usuario, new ArrayList());
+
+    public static Project project = new Project();
 
     public MainLayout() {
+        usuario.addProject(project1);
+        usuario.addProject(project2);
+        System.out.println(usuario.getProjects());
+        System.out.println("My usuario actual: " + usuario);
         setPrimarySection(Section.DRAWER);
         addHeaderContent();
-        addDrawerContent(usuario, project);
+        addDrawerContent(usuario, usuario.getProjects());
     }
-
 
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
@@ -62,38 +76,47 @@ public class MainLayout extends AppLayout {
         addToNavbar(true, toggle, viewTitle);
     }
 
-    private void addDrawerContent(User usuario, Project project) {
+    private void addDrawerContent(User usuario, List<Project> projects) {
         H1 appName = new H1("project-management");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
-        Scroller scroller = new Scroller(createNavigation(project));
+        Scroller scroller = new Scroller(createNavigation(projects));
 
         addToDrawer(header, scroller, createFooter(usuario));
     }
 
-    private SideNav createNavigation(Project project) {
-        SideNav nav = new SideNav();
+    private VerticalLayout createNavigation(List<Project> projects) {
+        VerticalLayout buttonLayout = new VerticalLayout();
+    
+        for (Project proj : projects) {
+            Button projectButton = new Button(proj.getProjectName());
+            projectButton.addClickListener(e -> navigateToProject(proj));
+            buttonLayout.add(projectButton);
+        }
+    
+        return buttonLayout;
+    }
 
-        nav.addItem(new SideNavItem(project.getProjectName(), ProyectoView.class, LineAwesomeIcon.LOCK_SOLID.create()));
-
-        return nav;
+    private void navigateToProject(Project xProyecto) {
+        project = xProyecto;
+        getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
 
     private Footer createFooter(User usuario) {
         Footer layout = new Footer();
-    
+
         if (usuario.getUsername() != null) {
             System.out.println(usuario.getUsername());
             // Crear el componente de iniciales
             Avatar avatar = new Avatar(usuario.getUsername());
             avatar.setThemeName("xsmall");
             avatar.getElement().getStyle().set("tabindex", "-1");
-    
+
             // Crear el menú de usuario
             MenuBar userMenu = new MenuBar();
             userMenu.setThemeName("tertiary-inline contrast");
-    
+
             MenuItem userName = userMenu.addItem("");
             Div div = new Div();
             div.add(avatar);
@@ -106,17 +129,15 @@ public class MainLayout extends AppLayout {
             userName.getSubMenu().addItem("Sign out", e -> {
                 getUI().ifPresent(ui -> ui.navigate("login"));
             });
-    
+
             layout.add(userMenu);
         } else {
             Anchor loginLink = new Anchor("login", "Sign in");
             layout.add(loginLink);
         }
-    
+
         return layout;
     }
-    
-    
 
     @Override
     protected void afterNavigation() {

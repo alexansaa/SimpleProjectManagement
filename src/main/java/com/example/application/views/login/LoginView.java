@@ -36,12 +36,11 @@ import java.util.List;
 
 
 public class LoginView extends Composite<VerticalLayout> {
+    private String userPath = "Users.data";
+    private String projectsPath = "Projects.data";
     
     public static User usuario = new User();
-
-    public static User getUsuario() {
-        return usuario;
-    }
+    public static List<Project> projects = new ArrayList<>();
 
     private EmailField userField;
     private Select<String> select;
@@ -84,11 +83,7 @@ public class LoginView extends Composite<VerticalLayout> {
     }
 
     // Instanciamos el manipulador de datos y el main layout
-    appDataManipulator manipulator = new appDataManipulator("Users.data", "Projects.data");
-
-    
-
-    
+    appDataManipulator manipulator = new appDataManipulator(userPath, projectsPath);
 
     private void authenticateAndNavigate() {
         // Verificar las credenciales usando appDataManipulator        
@@ -103,15 +98,15 @@ public class LoginView extends Composite<VerticalLayout> {
         if (isValidInput(rol) && isValidInput(contrasena) && isValidInput(user)) {
 
             usuario = manipulator.getUserByNameData(user, contrasena, rol);
+            System.out.println("My usuario: " + usuario);
 
             if (usuario.getUsername() == "") {
                 Notification.show("Credenciales incorrectas, por favor intente de nuevo.");
                 return;
             }
             else {
+                projects = manipulator.getUserProjects(usuario);
                 getUI().ifPresent(ui -> ui.navigate("home"));
-
-
             }
         } else {
             // Mostrar mensaje de error

@@ -15,11 +15,15 @@ public class appDataManipulator {
     // Variables de instancia
     private List<User> appUsers = new ArrayList<>();
     private List<Project> appProjects = new ArrayList<>();
-    private String userPath = "Users.data";
-    private String projectsPath = "Projects.data";
+    private String userPath;
+    private String projectsPath;
 
     // Constructor
     public appDataManipulator(String usersPath, String projectsPath) {
+        // Seteo paths correspondientes
+        this.userPath = usersPath;
+        this.projectsPath = projectsPath;
+
         // Obtengo lista de usuarios
         List<Object> serializedUsers = readSerializedFile(usersPath);
         for (Object obj : serializedUsers) {
@@ -38,19 +42,25 @@ public class appDataManipulator {
 
         // Verificacion de existencia de datos
         if (appUsers.size() == 0) {
+            System.out.println("No hay usuarios");
             appUsers = defaultUsers();
-            writeSerializedFile(User.getObjectsList(appUsers), userPath);
+        } else {
+            System.out.println("Si hay usuarios");
         }
 
         if (appProjects.size() == 0) {
+            System.out.println("No hay proyectos");
             appProjects = defaultProjects();
-            writeSerializedFile(Project.getObjectsList(appProjects), projectsPath);
+        } else {
+            System.out.println("Si hay proyectos");
         }
+
+        this.saveData();
     }    
 
     // Metodos estaticos
     // escritura, creacion de archivos serializados dado un arreglo de objetos y un path
-    private void writeSerializedFile(List<Object> objetos,String pathArchivo){
+    private void writeSerializedFile(List<Object> objetos, String pathArchivo){
         ObjectOutputStream fileOut;
         FileOutputStream fos;
         try{
@@ -69,21 +79,31 @@ public class appDataManipulator {
     
     // Leectura archivos serializados dado path
     public List<Object> readSerializedFile(String pathArchivo) {
-    List<Object> arryList = new ArrayList<>();
+        List<Object> arryList = new ArrayList<>();
 
-    try (ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(pathArchivo))) {
-        Object someObject = fileIn.readObject();
-        if (someObject instanceof List<?>) {
-            arryList = (List<Object>) someObject;
+        FileInputStream fis;
+        ObjectInputStream fileIn = null;
+
+        try {
+            fis = new FileInputStream(pathArchivo);
+            fileIn = new ObjectInputStream(fis);
+            Object somObject = null;
+
+            do {
+                somObject = (Object)fileIn.readObject();
+                if(somObject != null) {
+                    arryList.add(somObject);
+                }
+            } while(somObject != null);
+            fileIn.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("El archivo no existe: " + e.getMessage());
+            writeSerializedFile(arryList, pathArchivo);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error al leer el archivo serializado: " + e.getMessage());
+            e.printStackTrace();
         }
-    } catch (FileNotFoundException e) {
-        System.out.println("El archivo no existe: " + e.getMessage());
-        writeSerializedFile(arryList, pathArchivo);
-    } catch (IOException | ClassNotFoundException e) {
-        System.out.println("Error al leer el archivo serializado: " + e.getMessage());
-        e.printStackTrace();
-    }
-    return arryList;
+        return arryList;
 }
 
 
@@ -163,7 +183,6 @@ public class appDataManipulator {
         List<User> estudiantes = new ArrayList<>();
         estudiantes.add(myUsers.get(1));
 
-
         Task task1 = new Task("Tarea 1", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
         Task task2 = new Task("Tarea 2", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
 
@@ -175,12 +194,11 @@ public class appDataManipulator {
     }
 
     private List<Project> defaultProjects() {
-        List<User> myUsers = defaultUsers();
         List<Task> myTasks = defaultTasks();
 
-        User profesor = myUsers.get(0);
+        User profesor = appUsers.get(0);
 
-        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", myTasks.size(), myUsers, profesor, myTasks);
+        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", appUsers, profesor, myTasks);
 
         List<Project> myProjects = new ArrayList<>();
         myProjects.add(myProject);
