@@ -49,7 +49,7 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
     private H2 viewTitle;
     private User usuario = LoginView.usuario;
-    public Project project1 = new Project("Proj name", LocalDate.now(), LocalDate.now(), "My desc", new ArrayList(),
+    public Project project1 = new Project("Proj name muy pero muy largo que pasa", LocalDate.now(), LocalDate.now(), "My desc", new ArrayList(),
             usuario, new ArrayList());
     public Project project2 = new Project("Proj 2", LocalDate.now(), LocalDate.now(), "My desc 2", new ArrayList(),
             usuario, new ArrayList());
@@ -92,14 +92,18 @@ public class MainLayout extends AppLayout {
         for (Project proj : projects) {
             Button projectButton = new Button(proj.getProjectName());
             projectButton.addClickListener(e -> navigateToProject(proj));
+            projectButton.setWidth("100%");
             buttonLayout.add(projectButton);
         }
     
         return buttonLayout;
     }
+ 
 
     private void navigateToProject(Project xProyecto) {
         project = xProyecto;
+        System.out.println("Aplasto el boton del: " + project);
+        getUI().ifPresent(ui -> ui.navigate("home"));
         getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
 
@@ -126,7 +130,7 @@ public class MainLayout extends AppLayout {
             div.getElement().getStyle().set("align-items", "center");
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
-            userName.getSubMenu().addItem("Sign out", e -> {
+            userName.getSubMenu().addItem("Cerrar sesión", e -> {
                 getUI().ifPresent(ui -> ui.navigate("login"));
             });
 

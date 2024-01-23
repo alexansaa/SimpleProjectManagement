@@ -16,6 +16,10 @@ public class Task implements Serializable {
     private List<Comment> comments = new ArrayList<>();
 
     // Constructor
+
+    public Task() {
+    }
+
     public Task(String taskName, String description, LocalDate creationDate,
                 List<User> assignedUsers, String taskStatus, List<Comment> comments) {
         this.taskName = taskName;

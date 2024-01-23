@@ -1,6 +1,8 @@
 package com.example.application.views.tarea;
 
+import com.example.application.data.User;
 import com.example.application.views.MainLayout;
+import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -23,7 +25,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
-import jakarta.annotation.security.RolesAllowed;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -31,6 +32,8 @@ import java.time.ZoneOffset;
 @Route(value = "tarea", layout = MainLayout.class)
 @Uses(Icon.class)
 public class TareaView extends Composite<VerticalLayout> {
+
+    private User usuario = LoginView.usuario;
 
     public TareaView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -82,7 +85,9 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutColumn4.setAlignItems(Alignment.START);
         layoutColumn4.setAlignSelf(FlexComponent.Alignment.CENTER, menuBar);
         menuBar.setWidth("min-content");
-        setMenuBarSampleData(menuBar);
+        if (usuario.getRole().equals("Profesor")){
+            setMenuBarSampleData(menuBar);
+        }
         layoutRow2.setWidthFull();
         layoutColumn4.setFlexGrow(1.0, layoutRow2);
         layoutRow2.addClassName(Gap.SMALL);
@@ -139,6 +144,9 @@ public class TareaView extends Composite<VerticalLayout> {
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Volver");
         buttonSecondary.setWidth("min-content");
+        buttonSecondary.addClickListener(e -> {
+            buttonSecondary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
+        });
         getContent().add(layoutColumn2);
         layoutColumn2.add(layoutRow);
         layoutRow.add(layoutColumn3);
@@ -166,7 +174,7 @@ public class TareaView extends Composite<VerticalLayout> {
     private void setMenuBarSampleData(MenuBar menuBar) {
         menuBar.addItem("Editar");
         menuBar.addItem("Eliminar");
-        menuBar.addItem("Crear");
+        menuBar.addItem("Crear", e -> getUI().ifPresent(ui -> ui.navigate("crear-tarea")));
     }
 
     private void setMessageListSampleData(MessageList messageList) {
