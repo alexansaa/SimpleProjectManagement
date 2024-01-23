@@ -48,22 +48,22 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
  */
 public class MainLayout extends AppLayout {
     private H2 viewTitle;
-    private User usuario = LoginView.usuario;
-    public Project project1 = new Project("Proj name muy pero muy largo que pasa", LocalDate.now(), LocalDate.now(), "My desc", new ArrayList(),
-            usuario, new ArrayList());
-    public Project project2 = new Project("Proj 2", LocalDate.now(), LocalDate.now(), "My desc 2", new ArrayList(),
-            usuario, new ArrayList());
+    // private User usuario = LoginView.usuario;
+    // public Project project1 = new Project("Proj name muy pero muy largo que pasa", LocalDate.now(), LocalDate.now(), "My desc", new ArrayList(),
+    //         usuario, new ArrayList(), "En Curso");
+    // public Project project2 = new Project("Proj 2", LocalDate.now(), LocalDate.now(), "My desc 2", new ArrayList(),
+    //         usuario, new ArrayList(), "Terminado");
 
     public static Project project = new Project();
 
     public MainLayout() {
-        usuario.addProject(project1);
-        usuario.addProject(project2);
-        System.out.println(usuario.getProjects());
-        System.out.println("My usuario actual: " + usuario);
+        // usuario.addProject(project1);
+        // usuario.addProject(project2);
+        // System.out.println(usuario.getProjects());
+        // System.out.println("My usuario actual: " + usuario);
         setPrimarySection(Section.DRAWER);
         addHeaderContent();
-        addDrawerContent(usuario, usuario.getProjects());
+        addDrawerContent(LoginView.usuario, LoginView.projects);
     }
 
     private void addHeaderContent() {

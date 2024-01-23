@@ -16,16 +16,18 @@ public class Project implements Serializable {
     private List<User> assignedUsers = new ArrayList<>();
     private User creatorOwner;
     private List<Task> taskList = new ArrayList<>();
+    private String estado;
 
     // Constructor
     public Project(String projectName, LocalDate creationDate, LocalDate dueDate, String description,
-        List<User> assignedUsers, User creatorOwner, List<Task> taskList) {
+        List<User> assignedUsers, User creatorOwner, List<Task> taskList, String estado) {
         this.projectName = projectName;
         this.creationDate = creationDate;
         this.dueDate = dueDate;
         this.description = description;
         this.creatorOwner = creatorOwner;
         this.taskList = taskList;
+        this.estado = estado;
         for (User usr : assignedUsers) {
             this.addAssignedUser(usr);
         }
@@ -67,6 +69,10 @@ public class Project implements Serializable {
         return taskList;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
     // Setters
     public void setProjectName(String projectName) {
         this.projectName = projectName;
@@ -103,15 +109,15 @@ public class Project implements Serializable {
             this.assignedUsers.add(user);
         }
 
-        boolean prjExists = false;
-        for (Project prj : user.getProjects()){
-            if (prj.getProjectName() == this.projectName) {
-                prjExists = true;
-            }
-        }
-        if (!prjExists) {
-            user.addProject(this);
-        }
+        // boolean prjExists = false;
+        // for (Project prj : user.getProjects()){
+        //     if (prj.getProjectName() == this.projectName) {
+        //         prjExists = true;
+        //     }
+        // }
+        // if (!prjExists) {
+        //     user.addProject(this);
+        // }
     }
 
     public void updateAssignedUser(User user, User newUser) {
@@ -126,6 +132,10 @@ public class Project implements Serializable {
 
     public void setCreatorOwner(User creatorOwner) {
         this.creatorOwner = creatorOwner;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public void setTaskList(List<Task> taskList) {

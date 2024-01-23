@@ -2,22 +2,18 @@ package com.example.application.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.List;
 
 public class User implements Serializable {
     private String username;
     private String password;
     private String role;
-    private List<Project> projects = new ArrayList<>();
 
     // Constructor
-    public User(String username, String password, String role, List<Project> projects) {
+    public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.projects = projects;
     }
     public User() {
     }
@@ -47,31 +43,6 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
-
-    public Project getProjectByindex(int index) {
-        return projects.get(index);
-    }
-
-    public void addProject(Project project) {
-        this.projects.add(project);
-    }
-
-    public void deleteProject(Project project) {
-        this.projects.remove((project));
-    }
-
-    public void updateProject(Project project, Project newProject) {
-        int index = this.projects.indexOf(project);
-        this.projects.set(index, newProject);
-    }
-
     public static List<Object> getObjectsList(List<User> users) {
         List<Object> myObjects = new ArrayList<>();
         
@@ -91,7 +62,6 @@ public class User implements Serializable {
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
-                ", projects=" + projects.size() +
                 '}';
     }
 }

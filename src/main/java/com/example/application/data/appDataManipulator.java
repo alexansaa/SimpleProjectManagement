@@ -1,6 +1,5 @@
 package com.example.application.data;
 
-import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -109,6 +108,11 @@ public class appDataManipulator {
         writeSerializedFile(Project.getObjectsList(appProjects), projectsPath);
     }
 
+    // Obtenemos lista de usuarios
+    public List<User> getUsers() {
+        return appUsers;
+    }
+
     // Obtenemos proyectos pertenecientes a un usuario
     public List<Project> getUserProjects(User user) {
         List<Project> userProjects = new ArrayList<>();
@@ -139,27 +143,29 @@ public class appDataManipulator {
             if(usr.getUsername().equals(userName) && usr.getPassword().equals(pass) && usr.getRole().equals(rol)) {
                 System.out.println("Usuario encontrado");
                 return usr;
-            } else {
+            } else if(usr.getUsername().equals(userName)){
                 System.out.println("Datos de usuario incorrectos");
                 // Usuario existe pero datos incorrectos
-                List<Project> emptyList = new ArrayList<>();
-                User wrongUser = new User("", "", "", emptyList);
+                User wrongUser = new User("", "", "");
                 return wrongUser;
             }
         }
 
         System.out.println("Creando nuevo usuario");
-        List<Project> newProjectList = new ArrayList<>();
-        User newUser = new User(userName, pass, rol, newProjectList);
+        User newUser = new User(userName, pass, rol);
         appUsers.add(newUser);
         return newUser;
     }
 
+    // Agrega un proyecto a la lista de proyectos
+    public void addProject(Project project){
+        this.appProjects.add(project);
+    }
+
     private List<Object> mockData() {
         // Creo usuarios
-        List<Project> projects = new ArrayList<>();
-        User user1 = new User("Usuario1", "Pass1", "Profesor", projects);
-        User user2 = new User("Usuario2", "Pass1", "Estudiante", projects);
+        User user1 = new User("Usuario1", "Pass1", "Profesor");
+        User user2 = new User("Usuario2", "Pass1", "Alumno");
         List<User> myUsers = new ArrayList<>();
         myUsers.add(user1);
         myUsers.add(user2);
@@ -186,7 +192,7 @@ public class appDataManipulator {
         myTasks.add(task2);
 
         // Creo Proyecto
-        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", estudiantes, profesor, myTasks);
+        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", estudiantes, profesor, myTasks, "No Iniciado");
 
         List<Project> myProjects = new ArrayList<>();
         myProjects.add(myProject);

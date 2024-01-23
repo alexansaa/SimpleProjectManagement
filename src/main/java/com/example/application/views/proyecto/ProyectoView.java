@@ -186,7 +186,7 @@ public class ProyectoView extends Composite<VerticalLayout> {
     }
 
     private void navigateToTask(Task task) {  
-        tarea = task;
+        this.tarea = task;
         getUI().ifPresent(ui -> ui.navigate("proyecto"));
         getUI().ifPresent(ui -> ui.navigate("tarea"));
     }

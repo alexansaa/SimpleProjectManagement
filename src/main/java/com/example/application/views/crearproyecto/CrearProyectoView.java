@@ -1,6 +1,10 @@
 package com.example.application.views.crearproyecto;
 
+import com.example.application.data.Project;
+import com.example.application.data.Task;
+import com.example.application.data.User;
 import com.example.application.views.MainLayout;
+import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -20,28 +24,32 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import jakarta.annotation.security.RolesAllowed;
+
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @PageTitle("Crear Proyecto")
 @Route(value = "crear-proyecto", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
 @Uses(Icon.class)
 public class CrearProyectoView extends Composite<VerticalLayout> {
+    VerticalLayout layoutColumn2 = new VerticalLayout();
+    VerticalLayout layoutColumn3 = new VerticalLayout();
+    FormLayout formLayout2Col = new FormLayout();
+    TextField textField = new TextField();
+    DatePicker datePicker = new DatePicker();
+    FormLayout formLayout2Col2 = new FormLayout();
+    MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
+    ComboBox comboBox = new ComboBox();
+    TextArea textArea = new TextArea();
+    HorizontalLayout layoutRow = new HorizontalLayout();
+    Button buttonPrimary = new Button();
+    Button buttonSecondary = new Button();
 
     public CrearProyectoView() {
-        VerticalLayout layoutColumn2 = new VerticalLayout();
-        VerticalLayout layoutColumn3 = new VerticalLayout();
-        FormLayout formLayout2Col = new FormLayout();
-        TextField textField = new TextField();
-        DatePicker datePicker = new DatePicker();
-        FormLayout formLayout2Col2 = new FormLayout();
-        MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
-        ComboBox comboBox = new ComboBox();
-        TextArea textArea = new TextArea();
-        HorizontalLayout layoutRow = new HorizontalLayout();
-        Button buttonPrimary = new Button();
-        Button buttonSecondary = new Button();
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(JustifyContentMode.CENTER);
@@ -76,6 +84,8 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         buttonPrimary.setText("Crear");
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonPrimary.addClickListener((event -> onButtonPrimaryClick()));
+        
         buttonSecondary.setText("Volver");
         buttonSecondary.addClickListener(e -> {
             buttonSecondary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
@@ -99,21 +109,65 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
     }
 
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
+        List<User> users = LoginView.usuarios;
+
         List<SampleItem> sampleItems = new ArrayList<>();
-        sampleItems.add(new SampleItem("first", "First", null));
-        sampleItems.add(new SampleItem("second", "Second", null));
-        sampleItems.add(new SampleItem("third", "Third", Boolean.TRUE));
-        sampleItems.add(new SampleItem("fourth", "Fourth", null));
+
+        for(User usr : users){
+            sampleItems.add(new SampleItem(usr.getUsername(), usr.getUsername(), null));
+        }
         multiSelectComboBox.setItems(sampleItems);
         multiSelectComboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
     }
 
     private void setComboBoxSampleData(ComboBox comboBox) {
         List<SampleItem> sampleItems = new ArrayList<>();
-        sampleItems.add(new SampleItem("first", "No iniciado", null));
-        sampleItems.add(new SampleItem("second", "En progreso", null));
-        sampleItems.add(new SampleItem("third", "Finalizado", Boolean.TRUE));
+        sampleItems.add(new SampleItem("No iniciado", "No iniciado", null));
+        sampleItems.add(new SampleItem("En progreso", "En progreso",  null));
+        sampleItems.add(new SampleItem("Finalizado", "Finalizado",  Boolean.TRUE));
         comboBox.setItems(sampleItems);
         comboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
+    }
+
+    private void onButtonPrimaryClick() {
+        // Access the values from the form components
+        String nombreProyecto = textField.getValue();
+        LocalDate fechaEntrega = datePicker.getValue();
+        Set<SampleItem> estudiantesSeleccionados = multiSelectComboBox.getValue();
+        List<User> usuariosAsignados = new ArrayList<>();
+        for(SampleItem usr : estudiantesSeleccionados){
+            User myUser = LoginView.getUser(usr.value);
+            if(myUser.getUsername() != ""){
+                usuariosAsignados.add(myUser);
+            }
+        }
+        Object estadoSeleccionado = comboBox.getValue();
+        String estado = "";
+        if (estadoSeleccionado instanceof SampleItem) {
+            SampleItem myEstado = (SampleItem) estadoSeleccionado;
+        
+            // Now you can access the value field
+            estado = myEstado.value();
+        
+            // Use estadoSeleccionadoValue as needed
+            System.out.println("Estado Seleccionado Value: " + estado);
+        } else {
+            // Handle the case where the value is not of type SampleItem
+            System.out.println("Unexpected value type");
+        }
+        String descripcion = textArea.getValue();
+
+        System.out.println("Nombre del proyecto: " + nombreProyecto);
+        System.out.println("Fecha de entrega: " + fechaEntrega);
+        System.out.println("Estudiantes seleccionados: " + usuariosAsignados);
+        System.out.println("Estado seleccionado: " + estado);
+        System.out.println("Descripción: " + descripcion);
+
+        List<Task> newTasks = new ArrayList<>();
+
+        Project newProject = new Project(nombreProyecto, LocalDate.now(),
+            fechaEntrega, descripcion, usuariosAsignados, LoginView.usuario, newTasks,
+            estado);
+        LoginView.addProject(newProject);
     }
 }

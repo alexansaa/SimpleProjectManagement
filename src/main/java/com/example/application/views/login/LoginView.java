@@ -1,13 +1,9 @@
 package com.example.application.views.login;
 
 import com.example.application.data.Project;
-import com.example.application.data.Project;
 import com.example.application.data.User;
 import com.example.application.data.appDataManipulator;
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
@@ -36,16 +32,20 @@ import java.util.List;
 
 
 public class LoginView extends Composite<VerticalLayout> {
-    private String userPath = "Users.data";
-    private String projectsPath = "Projects.data";
+    private static String userPath = "Users.data";
+    private static String projectsPath = "Projects.data";
     
     public static User usuario = new User();
     public static List<Project> projects = new ArrayList<>();
-
+    public static List<User> usuarios = new ArrayList<>();
+    
     private EmailField userField;
     private Select<String> select;
     private PasswordField passwordField;
-    //public static User usuario = new User();
+    
+    // Instanciamos el manipulador de datos y el main layout
+    public static appDataManipulator manipulator = new appDataManipulator(userPath, projectsPath);
+
     public LoginView() {
         
         H2 h2 = new H2();
@@ -82,9 +82,6 @@ public class LoginView extends Composite<VerticalLayout> {
         select.setItems(roles);
     }
 
-    // Instanciamos el manipulador de datos y el main layout
-    appDataManipulator manipulator = new appDataManipulator(userPath, projectsPath);
-
     private void authenticateAndNavigate() {
         // Verificar las credenciales usando appDataManipulator        
 
@@ -105,6 +102,7 @@ public class LoginView extends Composite<VerticalLayout> {
                 return;
             }
             else {
+                usuarios = manipulator.getUsers();
                 projects = manipulator.getUserProjects(usuario);
                 getUI().ifPresent(ui -> ui.navigate("home"));
             }
@@ -118,5 +116,19 @@ public class LoginView extends Composite<VerticalLayout> {
     private boolean isValidInput(String input) {
         // Verificar que el campo no esté vacío
         return input != null && !input.trim().isEmpty();
+    }
+
+    public static User getUser(String userName) {
+        for (User usr : usuarios){
+            if(usr.getUsername().equals(userName)){
+                return usr;
+            }
+        }
+        return new User();
+    }
+
+    public static void addProject(Project project) {
+        projects.add(project);
+        manipulator.addProject(project);
     }
 }
