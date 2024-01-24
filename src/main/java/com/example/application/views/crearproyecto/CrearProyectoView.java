@@ -116,7 +116,6 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         layoutRow.add(buttonSecondary);
     }
 
-
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
         List<User> users = LoginView.usuarios;
 

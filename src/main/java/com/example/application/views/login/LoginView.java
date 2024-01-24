@@ -144,7 +144,7 @@ public class LoginView extends Composite<VerticalLayout> {
         for(Project proj : projects) {
             if(proj.getProjectName().equals(newProject.getProjectName())){
                 proj = newProject;
-                LoginView.manipulator.updateProject(newProject);
+                manipulator.updateProject(newProject);
                 return;
             }
         }
@@ -155,7 +155,7 @@ public class LoginView extends Composite<VerticalLayout> {
             if(proj.getProjectName().equals(project.getProjectName())){
                 int index = projects.indexOf(proj);
                 projects.remove(index);
-                LoginView.manipulator.deleteProject(project);
+                manipulator.deleteProject(project);
                 return;
             }
         }

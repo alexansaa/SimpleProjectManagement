@@ -5,9 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.Comment;
-
-
 public class Project implements Serializable {
     private String projectName;
     private LocalDate creationDate;
@@ -146,18 +143,32 @@ public class Project implements Serializable {
         return this.taskList.get(index);
     }
 
-    public void addTask(Task task) {
+    public boolean addTask(Task task) {
+        for(Task tsk : taskList){
+            if(tsk.getTaskName().equals(task.getTaskName())){
+                return false;
+            }
+        }
         this.taskList.add(task);
+        return true;
     }
 
-    public void updateTask(Task task, Task newTask) {
-        int index = this.taskList.indexOf(task);
-        this.taskList.set(index, newTask);
+    public void updateTask(Task newTask) {
+        for(Task tsk : taskList){
+            if(tsk.getTaskName().equals(newTask.getTaskName())){
+                tsk = newTask;
+                return;
+            }
+        }
     }
 
-    public void removeTask(Task task) {
-        int index = this.taskList.indexOf(task);
-        this.taskList.remove(index);
+    public void deleteTask(Task task) {
+        for(Task tsk : taskList){
+            if(tsk.getTaskName().equals(task.getTaskName())){
+                taskList.remove(tsk);
+                return;
+            }
+        }
     }
 
     // toString method for easy printing
