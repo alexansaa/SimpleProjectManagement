@@ -1,6 +1,11 @@
 package com.example.application.views.tarea;
 
+import com.example.application.data.Comment;
+import com.example.application.data.Task;
+import com.example.application.data.User;
 import com.example.application.views.MainLayout;
+import com.example.application.views.login.LoginView;
+import com.example.application.views.proyecto.ProyectoView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -23,17 +28,25 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
-import jakarta.annotation.security.RolesAllowed;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
-@PageTitle("tarea")
+@PageTitle("Tarea")
 @Route(value = "tarea", layout = MainLayout.class)
-@RolesAllowed("USER")
 @Uses(Icon.class)
 public class TareaView extends Composite<VerticalLayout> {
 
+    private User usuario = LoginView.usuario;
+    private Task tarea = ProyectoView.tarea;
+    private List<Comment> comments = tarea.getComments();
+
+
     public TareaView() {
+        System.out.println(comments);
         VerticalLayout layoutColumn2 = new VerticalLayout();
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
@@ -83,7 +96,9 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutColumn4.setAlignItems(Alignment.START);
         layoutColumn4.setAlignSelf(FlexComponent.Alignment.CENTER, menuBar);
         menuBar.setWidth("min-content");
-        setMenuBarSampleData(menuBar);
+        if (usuario.getRole().equals("Profesor")){
+            setMenuBarSampleData(menuBar);
+        }
         layoutRow2.setWidthFull();
         layoutColumn4.setFlexGrow(1.0, layoutRow2);
         layoutRow2.addClassName(Gap.SMALL);
@@ -92,7 +107,7 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutRow2.setHeight("80px");
         layoutRow2.setAlignItems(Alignment.START);
         layoutRow2.setJustifyContentMode(JustifyContentMode.START);
-        h2.setText("Tarea 1");
+        h2.setText(tarea.getTaskName());
         layoutRow2.setAlignSelf(FlexComponent.Alignment.CENTER, h2);
         h2.setWidth("800px");
         h2.setHeight("50px");
@@ -103,19 +118,19 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutColumn5.setHeight("100px");
         layoutColumn5.setJustifyContentMode(JustifyContentMode.START);
         layoutColumn5.setAlignItems(Alignment.END);
-        h4.setText("Estado: Activo");
+        h4.setText("Estado: " + tarea.getTaskStatus());
         layoutColumn5.setAlignSelf(FlexComponent.Alignment.END, h4);
         h4.setWidth("max-content");
-        h42.setText("Fecha de creación: 11/01/2024");
+        h42.setText("Fecha de creación: " + tarea.getCreationDate().toString());
         h42.setWidth("max-content");
-        h43.setText("Creado por: Juan Pérez");
-        h43.setWidth("max-content");
-        h44.setText("Asignado a: Pedro, Jose, Roberto");
+        h44.setText("Asignado a: " + tarea.getAssignedUsers().stream()
+                .map(User::getUsername) // Suponiendo que hay un método getUsername() en la clase User
+                .collect(Collectors.joining(", ")));
         h44.setWidth("max-content");
         h3.setText("Indicaciones");
         h3.setWidth("max-content");
         textMedium.setText(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+                tarea.getDescription());
         textMedium.setWidth("100%");
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
         h32.setText("Comentarios");
@@ -135,11 +150,17 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutRow4.setAlignItems(Alignment.CENTER);
         layoutRow4.setJustifyContentMode(JustifyContentMode.CENTER);
         buttonPrimary.setText("Agregar Comentario");
+        buttonPrimary.addClickListener(e -> {
+            buttonPrimary.getUI().ifPresent(ui -> ui.navigate("crear-comentario"));
+        });
         layoutRow4.setAlignSelf(FlexComponent.Alignment.CENTER, buttonPrimary);
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Volver");
         buttonSecondary.setWidth("min-content");
+        buttonSecondary.addClickListener(e -> {
+            buttonSecondary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
+        });
         getContent().add(layoutColumn2);
         layoutColumn2.add(layoutRow);
         layoutRow.add(layoutColumn3);
@@ -165,19 +186,26 @@ public class TareaView extends Composite<VerticalLayout> {
     }
 
     private void setMenuBarSampleData(MenuBar menuBar) {
-        menuBar.addItem("Editar");
-        menuBar.addItem("Eliminar");
-        menuBar.addItem("Crear");
+        menuBar.addItem("Editar Tarea");
+        menuBar.addItem("Eliminar Tarea");
     }
 
     private void setMessageListSampleData(MessageList messageList) {
-        MessageListItem message1 = new MessageListItem("Nature does not hurry, yet everything gets accomplished.",
-                LocalDateTime.now().minusDays(1).toInstant(ZoneOffset.UTC), "Matt Mambo");
-        message1.setUserColorIndex(1);
-        MessageListItem message2 = new MessageListItem(
-                "Using your talent, hobby or profession in a way that makes you contribute with something good to this world is truly the way to go.",
-                LocalDateTime.now().minusMinutes(55).toInstant(ZoneOffset.UTC), "Linsey Listy");
-        message2.setUserColorIndex(2);
-        messageList.setItems(message1, message2);
+        Random random = new Random();
+    
+        List<MessageListItem> messageItems = new ArrayList<>();
+    
+        for (Comment comment : comments) {
+            MessageListItem message = new MessageListItem(comment.getText(), 
+                comment.getCommentDate().atStartOfDay().toInstant(ZoneOffset.UTC),
+                comment.getOwner().getUsername());
+            message.setUserColorIndex(random.nextInt(14) + 1); // Números aleatorios entre 1 y 14
+            messageItems.add(message);
+        }
+    
+        messageList.setItems(messageItems.toArray(new MessageListItem[0]));
     }
+    
+
+    
 }

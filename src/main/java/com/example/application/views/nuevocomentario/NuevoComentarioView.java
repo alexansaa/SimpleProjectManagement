@@ -1,6 +1,11 @@
 package com.example.application.views.nuevocomentario;
 
+import java.time.LocalDate;
+
+import com.example.application.data.Comment;
 import com.example.application.views.MainLayout;
+import com.example.application.views.login.LoginView;
+import com.example.application.views.proyecto.ProyectoView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,19 +20,17 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Nuevo Comentario")
-@Route(value = "crear-proyecto3", layout = MainLayout.class)
-@RolesAllowed("ADMIN")
+@Route(value = "crear-comentario")
 @Uses(Icon.class)
 public class NuevoComentarioView extends Composite<VerticalLayout> {
+    TextArea textArea = new TextArea();
+    HorizontalLayout layoutRow = new HorizontalLayout();
+    Button buttonPrimary = new Button();
+    Button buttonSecondary = new Button();
 
     public NuevoComentarioView() {
-        TextArea textArea = new TextArea();
-        HorizontalLayout layoutRow = new HorizontalLayout();
-        Button buttonPrimary = new Button();
-        Button buttonSecondary = new Button();
         getContent().setWidth("100%");
         getContent().setHeight("655px");
         getContent().setJustifyContentMode(JustifyContentMode.CENTER);
@@ -47,12 +50,26 @@ public class NuevoComentarioView extends Composite<VerticalLayout> {
         layoutRow.setAlignSelf(FlexComponent.Alignment.START, buttonPrimary);
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonPrimary.addClickListener((event) -> onButtonPrimaryClick());
         buttonSecondary.setText("Volver");
         layoutRow.setAlignSelf(FlexComponent.Alignment.START, buttonSecondary);
         buttonSecondary.setWidth("min-content");
+        buttonSecondary.addClickListener(e -> {
+            buttonSecondary.getUI().ifPresent(ui -> ui.navigate("tarea"));
+        });
         getContent().add(textArea);
         getContent().add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
+    }
+
+    private void onButtonPrimaryClick() {
+        String textoComentario = textArea.getValue();
+        
+        Comment newComment = new Comment(LoginView.usuario, textoComentario, LocalDate.now());
+
+        ProyectoView.tarea.addComment(newComment);
+        
+        getUI().ifPresent(ui -> ui.navigate("tarea"));
     }
 }

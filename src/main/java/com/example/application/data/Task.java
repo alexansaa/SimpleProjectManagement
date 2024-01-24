@@ -2,21 +2,24 @@ package com.example.application.data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.cglib.core.Local;
 
 public class Task implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     private String taskName;
     private String description;
     private LocalDate creationDate;
-    private List<User> assignedUsers;
+    private List<User> assignedUsers = new ArrayList<>();
     private String taskStatus;
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     // Constructor
+
+    public Task() {
+    }
+
     public Task(String taskName, String description, LocalDate creationDate,
                 List<User> assignedUsers, String taskStatus, List<Comment> comments) {
         this.taskName = taskName;

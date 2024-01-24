@@ -4,6 +4,8 @@ import com.example.application.data.Project;
 import com.example.application.data.Task;
 import com.example.application.data.User;
 import com.example.application.views.MainLayout;
+import com.example.application.views.home.HomeView;
+import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.Uses;
@@ -17,12 +19,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,34 +33,14 @@ import java.util.stream.Collectors;
 @Route(value = "proyecto", layout = MainLayout.class)
 @Uses(Icon.class)
 public class ProyectoView extends Composite<VerticalLayout> {
-    // Crear un objeto de ejemplo de la clase User para asignar al creador y a los usuarios asignados
-    public static User creatorOwner = new User("Juan Pérez", "password123", "Administrador", new ArrayList<>());
-    public static User user1 = new User("Pedro", "pass456", "Usuario", new ArrayList<>());
-    public static User user2 = new User("Jose", "pass789", "Usuario", new ArrayList<>());
-    
-    // Crear un objeto de ejemplo de la clase Task
-    public static Task task1 = new Task("Tarea 1", "Descripción de la tarea 1", LocalDate.now(), List.of(user1, user2), "En Progreso", new ArrayList<>());
-    public static Task task2 = new Task("Tarea 2", "Descripción de la tarea 2", LocalDate.now(), List.of(user2), "Completada", new ArrayList<>());
 
-    // Lista de usuarios asignados
-    public static List<User> assignedUsers = List.of(user1, user2);
+    private Project project =  MainLayout.project;
+    private List<Task> tasks = project.getTaskList();
+    public static Task tarea = new Task();
+    private User usuario = LoginView.usuario;
 
-    // Lista de tareas del proyecto
-    public static List<Task> taskList = List.of(task1, task2);
-
-    // Crear un objeto de ejemplo de la clase Project
-    public static Project project = new Project(
-            "Proyecto Ejemplo",
-            LocalDate.of(2024, 1, 11),  // Fecha de creación
-            LocalDate.of(2024, 1, 25),  // Fecha de entrega
-            "Descripción del proyecto de ejemplo",
-            2,  // Número de tareas
-            assignedUsers,
-            creatorOwner,
-            taskList
-    );
-    
     public ProyectoView() {
+        
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
@@ -77,11 +60,7 @@ public class ProyectoView extends Composite<VerticalLayout> {
         Hr hr2 = new Hr();
         H3 h32 = new H3();
         HorizontalLayout layoutRow3 = new HorizontalLayout();
-        Button buttonSecondary = new Button();
-        Paragraph textSmall = new Paragraph();
         HorizontalLayout layoutRow4 = new HorizontalLayout();
-        Button buttonSecondary2 = new Button();
-        Paragraph textSmall2 = new Paragraph();
         getContent().addClassName(Padding.XSMALL);
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
@@ -100,7 +79,9 @@ public class ProyectoView extends Composite<VerticalLayout> {
         layoutColumn3.getStyle().set("flex-grow", "1");
         layoutColumn3.setAlignSelf(FlexComponent.Alignment.CENTER, menuBar);
         menuBar.setWidth("min-content");
-        setMenuBarSampleData(menuBar);
+        if (usuario.getRole().equals("Profesor")){
+            setMenuBarSampleData(menuBar);
+        }
         layoutRow2.setWidthFull();
         layoutColumn3.setFlexGrow(1.0, layoutRow2);
         layoutRow2.addClassName(Gap.SMALL);
@@ -152,23 +133,11 @@ public class ProyectoView extends Composite<VerticalLayout> {
         layoutRow3.addClassName(Gap.XSMALL);
         layoutRow3.setWidth("100%");
         layoutRow3.setHeight("min-content");
-        buttonSecondary.setText("Tarea 1");
-        buttonSecondary.setWidth("min-content");
-        textSmall.setText(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-        textSmall.setWidth("max-content");
-        textSmall.getStyle().set("font-size", "var(--lumo-font-size-xs)");
         layoutRow4.setWidthFull();
         layoutColumn3.setFlexGrow(1.0, layoutRow4);
         layoutRow4.addClassName(Gap.XSMALL);
         layoutRow4.setWidth("100%");
         layoutRow4.setHeight("min-content");
-        buttonSecondary2.setText("Tarea 2");
-        buttonSecondary2.setWidth("min-content");
-        textSmall2.setText(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-        textSmall2.setWidth("max-content");
-        textSmall2.getStyle().set("font-size", "var(--lumo-font-size-xs)");
         getContent().add(layoutRow);
         layoutRow.add(layoutColumn2);
         layoutColumn2.add(layoutColumn3);
@@ -188,16 +157,46 @@ public class ProyectoView extends Composite<VerticalLayout> {
         layoutColumn3.add(hr2);
         layoutColumn3.add(h32);
         layoutColumn3.add(layoutRow3);
-        layoutRow3.add(buttonSecondary);
-        layoutRow3.add(textSmall);
         layoutColumn3.add(layoutRow4);
-        layoutRow4.add(buttonSecondary2);
-        layoutRow4.add(textSmall2);
+
+        for (Task task : tasks) {
+            VerticalLayout taskLayout = new VerticalLayout();
+            HorizontalLayout layoutRowi = new HorizontalLayout();
+            layoutRowi.setWidthFull();
+            layoutColumn3.setFlexGrow(1.0, layoutRowi);
+            layoutRowi.addClassName(Gap.XSMALL);
+            layoutRowi.setWidth("100%");
+            layoutRowi.setHeight("min-content");
+            
+            taskLayout.setWidth("min-content");
+        
+            Button taskButton = new Button(task.getTaskName());
+            taskButton.setWidth("min-content");
+            taskLayout.add(taskButton);
+
+            Paragraph taskDescription = new Paragraph(task.getDescription());
+            taskDescription.getStyle().set("font-size", "var(--lumo-font-size-xs)");
+            taskDescription.setWidth("max-content");
+            
+            layoutColumn3.add(layoutRowi);
+            layoutRowi.add(taskLayout);
+            layoutColumn3.add(taskDescription);
+            
+            taskButton.addClickListener(e -> navigateToTask(task));
+        }
+    }
+
+    private void navigateToTask(Task task) {  
+        tarea = task;
+        getUI().ifPresent(ui -> ui.navigate("proyecto"));
+        getUI().ifPresent(ui -> ui.navigate("tarea"));
     }
 
     private void setMenuBarSampleData(MenuBar menuBar) {
-        menuBar.addItem("Editar");
-        menuBar.addItem("Eliminar");
-        menuBar.addItem("Crear");
+        HomeView.volverMenu = false;
+        menuBar.addItem("Editar Proyecto");
+        menuBar.addItem("Eliminar Proyecto");
+        menuBar.addItem("Crear Nuevo Proyecto", e -> getUI().ifPresent(ui -> ui.navigate("crear-proyecto")));
+        menuBar.addItem("Crear Tarea", e -> getUI().ifPresent(ui -> ui.navigate("crear-tarea")));
     }
 }

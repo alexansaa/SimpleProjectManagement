@@ -3,32 +3,31 @@ package com.example.application.data;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Project implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     private String projectName;
     private LocalDate creationDate;
     private LocalDate dueDate;
     private String description;
-    private int numberOfTasks;
-    private List<User> assignedUsers;
+    private List<User> assignedUsers = new ArrayList<>();
     private User creatorOwner;
-    private List<Task> taskList;
+    private List<Task> taskList = new ArrayList<>();
+    private String estado;
 
     // Constructor
     public Project(String projectName, LocalDate creationDate, LocalDate dueDate, String description,
-                   int numberOfTasks, List<User> assignedUsers, User creatorOwner, List<Task> taskList) {
+        List<User> assignedUsers, User creatorOwner, List<Task> taskList, String estado) {
         this.projectName = projectName;
         this.creationDate = creationDate;
         this.dueDate = dueDate;
         this.description = description;
-        this.numberOfTasks = numberOfTasks;
-        this.assignedUsers = assignedUsers;
         this.creatorOwner = creatorOwner;
         this.taskList = taskList;
+        this.estado = estado;
+        for (User usr : assignedUsers) {
+            this.addAssignedUser(usr);
+        }
     }
 
     public Project(){
@@ -52,7 +51,7 @@ public class Project implements Serializable {
     }
 
     public int getNumberOfTasks() {
-        return numberOfTasks;
+        return this.taskList.size();
     }
 
     public List<User> getAssignedUsers() {
@@ -65,6 +64,10 @@ public class Project implements Serializable {
 
     public List<Task> getTaskList() {
         return taskList;
+    }
+
+    public String getEstado() {
+        return estado;
     }
 
     // Setters
@@ -84,10 +87,6 @@ public class Project implements Serializable {
         this.description = description;
     }
 
-    public void setNumberOfTasks(int numberOfTasks) {
-        this.numberOfTasks = numberOfTasks;
-    }
-
     public void setAssignedUsers(List<User> assignedUsers) {
         this.assignedUsers = assignedUsers;
     }
@@ -97,7 +96,25 @@ public class Project implements Serializable {
     }
 
     public void addAssignedUser(User user) {
-        this.assignedUsers.add(user);
+        boolean usrExists = false;
+        for (User usr : assignedUsers) {
+            if (usr.getUsername() == user.getUsername()) {
+                usrExists = true;
+            }
+        }
+        if (!usrExists) {
+            this.assignedUsers.add(user);
+        }
+
+        // boolean prjExists = false;
+        // for (Project prj : user.getProjects()){
+        //     if (prj.getProjectName() == this.projectName) {
+        //         prjExists = true;
+        //     }
+        // }
+        // if (!prjExists) {
+        //     user.addProject(this);
+        // }
     }
 
     public void updateAssignedUser(User user, User newUser) {
@@ -114,6 +131,10 @@ public class Project implements Serializable {
         this.creatorOwner = creatorOwner;
     }
 
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public void setTaskList(List<Task> taskList) {
         this.taskList = taskList;
     }
@@ -122,18 +143,32 @@ public class Project implements Serializable {
         return this.taskList.get(index);
     }
 
-    public void addTask(Task task) {
+    public boolean addTask(Task task) {
+        for(Task tsk : taskList){
+            if(tsk.getTaskName().equals(task.getTaskName())){
+                return false;
+            }
+        }
         this.taskList.add(task);
+        return true;
     }
 
-    public void updateTask(Task task, Task newTask) {
-        int index = this.taskList.indexOf(task);
-        this.taskList.set(index, newTask);
+    public void updateTask(Task newTask) {
+        for(Task tsk : taskList){
+            if(tsk.getTaskName().equals(newTask.getTaskName())){
+                tsk = newTask;
+                return;
+            }
+        }
     }
 
-    public void removeTask(Task task) {
-        int index = this.taskList.indexOf(task);
-        this.taskList.remove(index);
+    public void deleteTask(Task task) {
+        for(Task tsk : taskList){
+            if(tsk.getTaskName().equals(task.getTaskName())){
+                taskList.remove(tsk);
+                return;
+            }
+        }
     }
 
     // toString method for easy printing
@@ -144,7 +179,7 @@ public class Project implements Serializable {
                 ", creationDate=" + creationDate +
                 ", dueDate=" + dueDate +
                 ", description='" + description + '\'' +
-                ", numberOfTasks=" + numberOfTasks +
+                ", numberOfTasks=" + this.taskList.size() +
                 ", assignedUsers=" + assignedUsers +
                 ", creatorOwner='" + creatorOwner + '\'' +
                 // ", taskList=" + taskList +

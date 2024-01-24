@@ -1,17 +1,15 @@
 package com.example.application.views.login;
 
 import com.example.application.data.Project;
-import com.example.application.data.Project;
 import com.example.application.data.User;
 import com.example.application.data.appDataManipulator;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -23,6 +21,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +35,20 @@ import java.util.List;
 
 
 public class LoginView extends Composite<VerticalLayout> {
+    private static String userPath = "Users.data";
+    private static String projectsPath = "Projects.data";
     
     public static User usuario = new User();
-
-    public static User getUsuario() {
-        return usuario;
-    }
-
+    public static List<Project> projects = new ArrayList<>();
+    public static List<User> usuarios = new ArrayList<>();
+    
     private EmailField userField;
     private Select<String> select;
     private PasswordField passwordField;
-    //public static User usuario = new User();
+    
+    // Instanciamos el manipulador de datos y el main layout
+    public static appDataManipulator manipulator = new appDataManipulator(userPath, projectsPath);
+
     public LoginView() {
         
         H2 h2 = new H2();
@@ -83,13 +85,6 @@ public class LoginView extends Composite<VerticalLayout> {
         select.setItems(roles);
     }
 
-    // Instanciamos el manipulador de datos y el main layout
-    appDataManipulator manipulator = new appDataManipulator("Users.data", "Projects.data");
-
-    
-
-    
-
     private void authenticateAndNavigate() {
         // Verificar las credenciales usando appDataManipulator        
 
@@ -103,15 +98,16 @@ public class LoginView extends Composite<VerticalLayout> {
         if (isValidInput(rol) && isValidInput(contrasena) && isValidInput(user)) {
 
             usuario = manipulator.getUserByNameData(user, contrasena, rol);
+            System.out.println("My usuario: " + usuario);
 
             if (usuario.getUsername() == "") {
                 Notification.show("Credenciales incorrectas, por favor intente de nuevo.");
                 return;
             }
             else {
+                usuarios = manipulator.getUsers();
+                projects = manipulator.getUserProjects(usuario);
                 getUI().ifPresent(ui -> ui.navigate("home"));
-
-
             }
         } else {
             // Mostrar mensaje de error
@@ -123,5 +119,50 @@ public class LoginView extends Composite<VerticalLayout> {
     private boolean isValidInput(String input) {
         // Verificar que el campo no esté vacío
         return input != null && !input.trim().isEmpty();
+    }
+
+    public static User getUser(String userName) {
+        for (User usr : usuarios){
+            if(usr.getUsername().equals(userName)){
+                return usr;
+            }
+        }
+        return new User();
+    }
+
+    public static boolean addProject(Project project) {
+        for(Project proj : projects) {
+            if(proj.getProjectName().equals(project.getProjectName())){
+                Notification.show("No se puede crear el proyecto. Ya existe un proyecto con el mismo nombre.", 3000, Position.TOP_CENTER);
+                return false;
+            }
+        }
+
+        projects.add(project);
+        manipulator.addProject(project);
+        MainLayout.project = project;
+
+        return true;
+    }
+
+    public static void editProject(Project newProject){
+        for(Project proj : projects) {
+            if(proj.getProjectName().equals(newProject.getProjectName())){
+                proj = newProject;
+                manipulator.updateProject(newProject);
+                return;
+            }
+        }
+    }
+
+    public static void deleteProject(Project project){
+        for(Project proj : projects){
+            if(proj.getProjectName().equals(project.getProjectName())){
+                int index = projects.indexOf(proj);
+                projects.remove(index);
+                manipulator.deleteProject(project);
+                return;
+            }
+        }
     }
 }

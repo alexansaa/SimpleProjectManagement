@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Comment implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     private User owner;
     private String text;
     private LocalDate commentDate;

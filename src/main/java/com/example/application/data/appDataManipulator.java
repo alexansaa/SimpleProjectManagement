@@ -1,6 +1,5 @@
 package com.example.application.data;
 
-import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -15,11 +14,15 @@ public class appDataManipulator {
     // Variables de instancia
     private List<User> appUsers = new ArrayList<>();
     private List<Project> appProjects = new ArrayList<>();
-    private String userPath = "Users.data";
-    private String projectsPath = "Projects.data";
+    private String userPath;
+    private String projectsPath;
 
     // Constructor
     public appDataManipulator(String usersPath, String projectsPath) {
+        // Seteo paths correspondientes
+        this.userPath = usersPath;
+        this.projectsPath = projectsPath;
+
         // Obtengo lista de usuarios
         List<Object> serializedUsers = readSerializedFile(usersPath);
         for (Object obj : serializedUsers) {
@@ -27,7 +30,8 @@ public class appDataManipulator {
                 appUsers.add((User) obj);
             }
         }
-
+        System.out.println(appUsers);
+        
         // Obtengo lista de proyectos
         List<Object> serializedProjects = readSerializedFile(projectsPath);
         for (Object obj : serializedProjects) {
@@ -35,22 +39,23 @@ public class appDataManipulator {
                 appProjects.add((Project) obj);
             }
         }
+        System.out.println(appProjects);
 
         // Verificacion de existencia de datos
-        if (appUsers.size() == 0) {
-            appUsers = defaultUsers();
-            writeSerializedFile(User.getObjectsList(appUsers), userPath);
+        if (appUsers.size() == 0 || appProjects.size() == 0) {
+            List<Object> mockData = mockData();
+            List<User> myAppUsers = (List<User>)mockData.get(0);
+            List<Project> myAppProjects = (List<Project>)mockData.get(1);
+            appUsers = myAppUsers;
+            appProjects = myAppProjects;
         }
 
-        if (appProjects.size() == 0) {
-            appProjects = defaultProjects();
-            writeSerializedFile(Project.getObjectsList(appProjects), projectsPath);
-        }
+        this.saveData();
     }    
 
     // Metodos estaticos
     // escritura, creacion de archivos serializados dado un arreglo de objetos y un path
-    private void writeSerializedFile(List<Object> objetos,String pathArchivo){
+    private void writeSerializedFile(List<Object> objetos, String pathArchivo){
         ObjectOutputStream fileOut;
         FileOutputStream fos;
         try{
@@ -69,21 +74,31 @@ public class appDataManipulator {
     
     // Leectura archivos serializados dado path
     public List<Object> readSerializedFile(String pathArchivo) {
-    List<Object> arryList = new ArrayList<>();
+        List<Object> arryList = new ArrayList<>();
 
-    try (ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream(pathArchivo))) {
-        Object someObject = fileIn.readObject();
-        if (someObject instanceof List<?>) {
-            arryList = (List<Object>) someObject;
+        FileInputStream fis;
+        ObjectInputStream fileIn = null;
+
+        try {
+            fis = new FileInputStream(pathArchivo);
+            fileIn = new ObjectInputStream(fis);
+            Object somObject = null;
+
+            do {
+                somObject = (Object)fileIn.readObject();
+                if(somObject != null) {
+                    arryList.add(somObject);
+                }
+            } while(somObject != null);
+            fileIn.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("El archivo no existe: " + e.getMessage());
+            writeSerializedFile(arryList, pathArchivo);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error al leer el archivo serializado: " + e.getMessage());
+            e.printStackTrace();
         }
-    } catch (FileNotFoundException e) {
-        System.out.println("El archivo no existe: " + e.getMessage());
-        writeSerializedFile(arryList, pathArchivo);
-    } catch (IOException | ClassNotFoundException e) {
-        System.out.println("Error al leer el archivo serializado: " + e.getMessage());
-        e.printStackTrace();
-    }
-    return arryList;
+        return arryList;
 }
 
 
@@ -93,12 +108,24 @@ public class appDataManipulator {
         writeSerializedFile(Project.getObjectsList(appProjects), projectsPath);
     }
 
-    // Obtenemos proyectos pertenecientes a un usuario'
+    // Obtenemos lista de usuarios
+    public List<User> getUsers() {
+        return appUsers;
+    }
+
+    // Obtenemos proyectos pertenecientes a un usuario
     public List<Project> getUserProjects(User user) {
         List<Project> userProjects = new ArrayList<>();
         for (Project proj : appProjects) {
-            if (proj.getAssignedUsers().indexOf(user) >= 0) {
+            if (proj.getCreatorOwner().getUsername().equals(user.getUsername())) {
                 userProjects.add(proj);
+            } else {
+                List<User> projectAssignedUsers = proj.getAssignedUsers();
+                for (User assignedUser : projectAssignedUsers) {
+                    if (assignedUser.getUsername().equals(user.getUsername())) {
+                        userProjects.add(proj);
+                    }
+                }
             }
         }
         return userProjects;
@@ -107,85 +134,93 @@ public class appDataManipulator {
     // Obtenemos usuario dado nombre de usuario o creamos si no existe
     public User getUserByNameData(String userName, String pass, String rol) {
         for(User usr : appUsers) {
-            if(usr.getUsername() == userName && usr.getPassword() == pass && usr.getRole() == rol) {
+            System.out.println("comparacion de usuario: " + usr);
+            System.out.println("Datos: " + userName + " " + pass + " " + rol);
+            System.out.println("Comparaciones: " + usr.getUsername().equals(userName) + " " + usr.getPassword().equals(pass) + " " + usr.getRole().equals(rol));
+            System.out.println("Typos de Comparaciones: " + (usr.getUsername().getClass().getSimpleName()) + " " + (usr.getPassword().getClass().getSimpleName()) + " " + (usr.getRole().getClass().getSimpleName()));
+            System.out.println("Typos de datos: " + userName.getClass().getSimpleName() + " " + pass.getClass().getSimpleName() + " " + rol.getClass().getSimpleName());
+            
+            if(usr.getUsername().equals(userName) && usr.getPassword().equals(pass) && usr.getRole().equals(rol)) {
+                System.out.println("Usuario encontrado");
                 return usr;
-            } else if(usr.getUsername() == userName) {
-                if (usr.getPassword() != pass || usr.getRole() != rol) {
-                    // Usuario existe pero contraseña incorrecta
-                    List<Project> emptyList = new ArrayList<>();
-                    User wrongUser = new User("", "", "", emptyList);
-                    return wrongUser;
-                }
-        
+            } else if(usr.getUsername().equals(userName)){
+                System.out.println("Datos de usuario incorrectos");
+                // Usuario existe pero datos incorrectos
+                User wrongUser = new User("", "", "");
+                return wrongUser;
             }
         }
 
-        List<Project> newProjectList = new ArrayList<>();
-        User newUser = new User(userName, pass, rol, newProjectList);
+        System.out.println("Creando nuevo usuario");
+        User newUser = new User(userName, pass, rol);
         appUsers.add(newUser);
         return newUser;
     }
 
-    // Datos default
-    public List<User> defaultUsers() {
-        List<Project> emptyProjList = new ArrayList<>();
-        User user1 = new User("Usuario1", "Pass1", "Profesor", emptyProjList);
-        User user2 = new User("Usuario2", "Pass1", "Estudiante", emptyProjList);
+    // Agrega un proyecto a la lista de proyectos
+    public void addProject(Project project){
+        this.appProjects.add(project);
+    }
+
+    public void updateProject(Project newProject){
+        for(Project proj : this.appProjects){
+            if(proj.getProjectName().equals(newProject.getProjectName())){
+                proj = newProject;
+                return;
+            }
+        }
+    }
+
+    public void deleteProject(Project project){
+        for(Project proj : this.appProjects){
+            if(proj.getProjectName().equals(project.getProjectName())){
+                int index = this.appProjects.indexOf(proj);
+                this.appProjects.remove(index);
+                return;
+            }
+        }
+    }
+
+    private List<Object> mockData() {
+        // Creo usuarios
+        User user1 = new User("Usuario1", "Pass1", "Profesor");
+        User user2 = new User("Usuario2", "Pass1", "Alumno");
         List<User> myUsers = new ArrayList<>();
         myUsers.add(user1);
         myUsers.add(user2);
-        return myUsers;
-    }
+        List<User> estudiantes = new ArrayList<>();
+        estudiantes.add(user2);
+        User profesor = user1;
 
-    private List<Comment> defaultComments() {
-        List<User> myUsers = defaultUsers();
+        // Creo Comentarios
         Comment comment1 = new Comment(myUsers.get(0),"Comentario1", LocalDate.now());
         Comment comment2 = new Comment(myUsers.get(1),"Comentario2", LocalDate.now());
         Comment comment3 = new Comment(myUsers.get(0),"Comentario3", LocalDate.now());
         Comment comment4 = new Comment(myUsers.get(1),"Comentario4", LocalDate.now());
-
         List<Comment> myComments = new ArrayList<>();
         myComments.add(comment1);
         myComments.add(comment2);
         myComments.add(comment3);
         myComments.add(comment4);
 
-        return myComments;
-    }
-
-    private List<Task> defaultTasks() {
-        List<User> myUsers = defaultUsers();
-        List<Comment> myComments = defaultComments();
-
-        List<User> profesores = new ArrayList<>();
-        profesores.add(myUsers.get(0));
-
-        List<User> estudiantes = new ArrayList<>();
-        estudiantes.add(myUsers.get(1));
-
-
+        // Creo tareas
         Task task1 = new Task("Tarea 1", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
         Task task2 = new Task("Tarea 2", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
-
         List<Task> myTasks = new ArrayList<>();
         myTasks.add(task1);
         myTasks.add(task2);
 
-        return myTasks;
-    }
-
-    private List<Project> defaultProjects() {
-        List<User> myUsers = defaultUsers();
-        List<Task> myTasks = defaultTasks();
-
-        User profesor = myUsers.get(0);
-
-        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", myTasks.size(), myUsers, profesor, myTasks);
+        // Creo Proyecto
+        Project myProject = new Project("Project 1", LocalDate.now(), LocalDate.now(), "Este es un proyecto genial!", estudiantes, profesor, myTasks, "No Iniciado");
 
         List<Project> myProjects = new ArrayList<>();
         myProjects.add(myProject);
 
-        return myProjects;
+        List<Object> mockDataArrays = new ArrayList<>();
+        mockDataArrays.add(myUsers);
+        mockDataArrays.add(myProjects);
+
+        return mockDataArrays;
     }
     
 }
