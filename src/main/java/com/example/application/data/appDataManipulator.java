@@ -28,18 +28,18 @@ public class appDataManipulator {
         for (Object obj : serializedUsers) {
             if (obj instanceof User) {
                 appUsers.add((User) obj);
-                System.out.println((User) obj);
             }
         }
-
+        System.out.println(appUsers);
+        
         // Obtengo lista de proyectos
         List<Object> serializedProjects = readSerializedFile(projectsPath);
         for (Object obj : serializedProjects) {
             if (obj instanceof Project) {
                 appProjects.add((Project) obj);
-                System.out.println((Project) obj);
             }
         }
+        System.out.println(appProjects);
 
         // Verificacion de existencia de datos
         if (appUsers.size() == 0 || appProjects.size() == 0) {
@@ -117,12 +117,12 @@ public class appDataManipulator {
     public List<Project> getUserProjects(User user) {
         List<Project> userProjects = new ArrayList<>();
         for (Project proj : appProjects) {
-            if (proj.getCreatorOwner().getUsername() == user.getUsername()) {
+            if (proj.getCreatorOwner().getUsername().equals(user.getUsername())) {
                 userProjects.add(proj);
             } else {
                 List<User> projectAssignedUsers = proj.getAssignedUsers();
                 for (User assignedUser : projectAssignedUsers) {
-                    if (assignedUser.getUsername() == user.getUsername()) {
+                    if (assignedUser.getUsername().equals(user.getUsername())) {
                         userProjects.add(proj);
                     }
                 }

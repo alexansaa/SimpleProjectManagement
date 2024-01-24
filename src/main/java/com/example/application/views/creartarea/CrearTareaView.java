@@ -128,5 +128,10 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         // String combo = comboBox.getValue();
         String text = textArea.getValue();
         
+        System.out.println(textField);
+        System.out.println(datePicker);
+        System.out.println(multiSelectComboBox);
+        System.out.println(comboBox);
+        System.out.println(textArea);
     }
 }
