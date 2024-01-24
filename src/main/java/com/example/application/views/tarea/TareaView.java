@@ -1,8 +1,10 @@
 package com.example.application.views.tarea;
 
+import com.example.application.data.Task;
 import com.example.application.data.User;
 import com.example.application.views.MainLayout;
 import com.example.application.views.login.LoginView;
+import com.example.application.views.proyecto.ProyectoView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -27,6 +29,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.stream.Collectors;
 
 @PageTitle("Tarea")
 @Route(value = "tarea", layout = MainLayout.class)
@@ -34,6 +37,7 @@ import java.time.ZoneOffset;
 public class TareaView extends Composite<VerticalLayout> {
 
     private User usuario = LoginView.usuario;
+    private Task tarea = ProyectoView.tarea;
 
     public TareaView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -96,7 +100,7 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutRow2.setHeight("80px");
         layoutRow2.setAlignItems(Alignment.START);
         layoutRow2.setJustifyContentMode(JustifyContentMode.START);
-        h2.setText("Tarea 1");
+        h2.setText(tarea.getTaskName());
         layoutRow2.setAlignSelf(FlexComponent.Alignment.CENTER, h2);
         h2.setWidth("800px");
         h2.setHeight("50px");
@@ -107,19 +111,19 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutColumn5.setHeight("100px");
         layoutColumn5.setJustifyContentMode(JustifyContentMode.START);
         layoutColumn5.setAlignItems(Alignment.END);
-        h4.setText("Estado: Activo");
+        h4.setText("Estado: " + tarea.getTaskStatus());
         layoutColumn5.setAlignSelf(FlexComponent.Alignment.END, h4);
         h4.setWidth("max-content");
-        h42.setText("Fecha de creación: 11/01/2024");
+        h42.setText("Fecha de creación: " + tarea.getCreationDate().toString());
         h42.setWidth("max-content");
-        h43.setText("Creado por: Juan Pérez");
-        h43.setWidth("max-content");
-        h44.setText("Asignado a: Pedro, Jose, Roberto");
+        h44.setText("Asignado a: " + tarea.getAssignedUsers().stream()
+                .map(User::getUsername) // Suponiendo que hay un método getUsername() en la clase User
+                .collect(Collectors.joining(", ")));
         h44.setWidth("max-content");
         h3.setText("Indicaciones");
         h3.setWidth("max-content");
         textMedium.setText(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+                tarea.getDescription());
         textMedium.setWidth("100%");
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
         h32.setText("Comentarios");
@@ -139,6 +143,9 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutRow4.setAlignItems(Alignment.CENTER);
         layoutRow4.setJustifyContentMode(JustifyContentMode.CENTER);
         buttonPrimary.setText("Agregar Comentario");
+        buttonPrimary.addClickListener(e -> {
+            buttonPrimary.getUI().ifPresent(ui -> ui.navigate("crear-comentario"));
+        });
         layoutRow4.setAlignSelf(FlexComponent.Alignment.CENTER, buttonPrimary);
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
