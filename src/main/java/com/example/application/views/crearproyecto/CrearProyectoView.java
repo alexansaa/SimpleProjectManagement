@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 @PageTitle("Crear Proyecto")
-@Route(value = "crear-proyecto", layout = MainLayout.class)
+@Route(value = "crear-proyecto")
 @RolesAllowed("ADMIN")
 @Uses(Icon.class)
 public class CrearProyectoView extends Composite<VerticalLayout> {
@@ -179,6 +179,12 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
             estado);
         LoginView.addProject(newProject);
     
-        buttonPrimary.getUI().ifPresent(ui -> ui.navigate("home"));
+        buttonPrimary.getUI().ifPresent(e -> navigateToProject(newProject));
+    }
+
+    public void navigateToProject(Project xProyecto) {
+        MainLayout.project = xProyecto;
+        getUI().ifPresent(ui -> ui.navigate("home"));
+        getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
 }

@@ -80,12 +80,17 @@ public class MainLayout extends AppLayout {
     }
  
 
-    private void navigateToProject(Project xProyecto) {
+    public void navigateToProject(Project xProyecto) {
         project = xProyecto;
         System.out.println("Aplasto el boton del: " + project);
         getUI().ifPresent(ui -> ui.navigate("home"));
         getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
+
+    public interface ProjectAddedObserver {
+        void onProjectAdded();
+    }
+    
 
     private Footer createFooter(User usuario) {
         Footer layout = new Footer();
@@ -129,6 +134,7 @@ public class MainLayout extends AppLayout {
         super.afterNavigation();
         viewTitle.setText(getCurrentPageTitle());
     }
+    
 
     private String getCurrentPageTitle() {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);

@@ -3,11 +3,13 @@ package com.example.application.views.login;
 import com.example.application.data.Project;
 import com.example.application.data.User;
 import com.example.application.data.appDataManipulator;
+import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -19,6 +21,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,12 +133,14 @@ public class LoginView extends Composite<VerticalLayout> {
     public static void addProject(Project project) {
         for(Project proj : projects) {
             if(proj.getProjectName().equals(project.getProjectName())){
+                Notification.show("No se puede crear el proyecto. Ya existe un proyecto con el mismo nombre.", 3000, Position.TOP_CENTER);
                 return;
             }
         }
 
         projects.add(project);
         manipulator.addProject(project);
+        MainLayout.project = project;
     }
 
     public static void editProject(Project newProject){

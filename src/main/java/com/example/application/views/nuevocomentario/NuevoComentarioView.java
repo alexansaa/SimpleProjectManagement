@@ -18,8 +18,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Nuevo Comentario")
-@Route(value = "crear-proyecto3", layout = MainLayout.class)
-@RolesAllowed("ADMIN")
+@Route(value = "crear-comentario", layout = MainLayout.class)
 @Uses(Icon.class)
 public class NuevoComentarioView extends Composite<VerticalLayout> {
 
