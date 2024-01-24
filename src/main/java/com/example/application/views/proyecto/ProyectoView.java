@@ -100,7 +100,7 @@ public class ProyectoView extends Composite<VerticalLayout> {
         layoutColumn4.setHeight("85px");
         layoutColumn4.setJustifyContentMode(JustifyContentMode.START);
         layoutColumn4.setAlignItems(Alignment.END);
-        h4.setText("Estado: ");
+        h4.setText("Estado: " + project.getEstado());
         layoutColumn4.setAlignSelf(FlexComponent.Alignment.END, h4);
         h4.setWidth("max-content");
         h4.setHeight("1000px");
@@ -194,7 +194,7 @@ public class ProyectoView extends Composite<VerticalLayout> {
 
     private void setMenuBarSampleData(MenuBar menuBar) {
         HomeView.volverMenu = false;
-        menuBar.addItem("Editar Proyecto");
+        menuBar.addItem("Editar Proyecto", e -> getUI().ifPresent(ui -> ui.navigate("editar-proyecto")));
         menuBar.addItem("Eliminar Proyecto");
         menuBar.addItem("Crear Nuevo Proyecto", e -> getUI().ifPresent(ui -> ui.navigate("crear-proyecto")));
         menuBar.addItem("Crear Tarea", e -> getUI().ifPresent(ui -> ui.navigate("crear-tarea")));

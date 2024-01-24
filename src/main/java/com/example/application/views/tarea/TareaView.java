@@ -186,7 +186,9 @@ public class TareaView extends Composite<VerticalLayout> {
     }
 
     private void setMenuBarSampleData(MenuBar menuBar) {
-        menuBar.addItem("Editar Tarea");
+        menuBar.addItem("Editar Tarea", e -> {
+            menuBar.getUI().ifPresent(ui -> ui.navigate("editar-tarea"));
+        });
         menuBar.addItem("Eliminar Tarea");
     }
 

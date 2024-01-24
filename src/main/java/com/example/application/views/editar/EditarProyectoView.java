@@ -1,16 +1,15 @@
-package com.example.application.views.creartarea;
+package com.example.application.views.editar;
 
-import com.example.application.data.Comment;
 import com.example.application.data.Project;
-import com.example.application.data.Task;
 import com.example.application.data.User;
 import com.example.application.views.MainLayout;
 import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.Icon;
@@ -23,22 +22,23 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-
-import javassist.tools.reflect.Sample;
+import jakarta.annotation.security.RolesAllowed;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@PageTitle("Crear Tarea")
-@Route(value = "crear-tarea", layout = MainLayout.class)
+@PageTitle("Editar Proyecto")
+@Route(value = "editar-proyecto")
 @Uses(Icon.class)
-public class CrearTareaView extends Composite<VerticalLayout> {
+public class EditarProyectoView extends Composite<VerticalLayout> {
 
     VerticalLayout layoutColumn2 = new VerticalLayout();
+    VerticalLayout layoutColumn3 = new VerticalLayout();
     FormLayout formLayout2Col = new FormLayout();
     TextField textField = new TextField();
+    DatePicker datePicker = new DatePicker();
     FormLayout formLayout2Col2 = new FormLayout();
     MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
     ComboBox comboBox = new ComboBox();
@@ -50,25 +50,33 @@ public class CrearTareaView extends Composite<VerticalLayout> {
     record SampleItem(String value, String label, Boolean disabled) {
     }
 
-    public CrearTareaView() {
+    public EditarProyectoView() {
+
+        Project currentProject = MainLayout.project;
+        
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(JustifyContentMode.CENTER);
         getContent().setAlignItems(Alignment.CENTER);
         layoutColumn2.setWidth("100%");
-        layoutColumn2.setMaxWidth("800px");
-        layoutColumn2.setHeight("500px");
+        layoutColumn2.getStyle().set("flex-grow", "1");
         layoutColumn2.setJustifyContentMode(JustifyContentMode.CENTER);
         layoutColumn2.setAlignItems(Alignment.CENTER);
+        layoutColumn3.setWidth("100%");
+        layoutColumn3.setMaxWidth("800px");
+        layoutColumn3.setHeight("500px");
+        layoutColumn3.setJustifyContentMode(JustifyContentMode.CENTER);
+        layoutColumn3.setAlignItems(Alignment.CENTER);
         formLayout2Col.setWidth("100%");
-        textField.setLabel("Nombre de la tarea");
+        textField.setLabel("Nombre del proyecto");
+        datePicker.setLabel("Fecha de entrega");
         formLayout2Col2.setWidth("100%");
         multiSelectComboBox.setLabel("Asignar estudiantes");
         multiSelectComboBox.setWidth("770px");
         setMultiSelectComboBoxSampleData(multiSelectComboBox);
         comboBox.setLabel("Estado");
         comboBox.setWidth("min-content");
-        setComboBoxSampleData(comboBox);
+        setComboBoxSampleData(comboBox, currentProject.getEstado());
         textArea.setLabel("Descripción");
         textArea.setWidth("100%");
         textArea.setHeight("300px");
@@ -77,27 +85,56 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         layoutRow.getStyle().set("flex-grow", "1");
         layoutRow.setAlignItems(Alignment.CENTER);
         layoutRow.setJustifyContentMode(JustifyContentMode.CENTER);
-        buttonPrimary.setText("Crear");
+        buttonPrimary.setText("Editar");
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonPrimary.addClickListener((event)->onButtonPrimaryClick());
+        buttonPrimary.addClickListener((event) -> onButtonPrimaryClick());
+
         buttonSecondary.setText("Volver");
-        buttonSecondary.setWidth("min-content");
         buttonSecondary.addClickListener(e -> {
             buttonSecondary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
         });
+        buttonSecondary.setWidth("min-content");
         getContent().add(layoutColumn2);
-        layoutColumn2.add(formLayout2Col);
+        layoutColumn2.add(layoutColumn3);
+        layoutColumn3.add(formLayout2Col);
         formLayout2Col.add(textField);
-        layoutColumn2.add(formLayout2Col2);
+        formLayout2Col.add(datePicker);
+        layoutColumn3.add(formLayout2Col2);
         formLayout2Col2.add(multiSelectComboBox);
         formLayout2Col2.add(comboBox);
-        layoutColumn2.add(textArea);
-        layoutColumn2.add(layoutRow);
+        layoutColumn3.add(textArea);
+        layoutColumn3.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
+
+        
+        textField.setValue(currentProject.getProjectName());
+        datePicker.setValue(currentProject.getDueDate());
+        multiSelectComboBox.setValue(getSampleItemsForUsers(currentProject.getAssignedUsers()));
+        textArea.setValue(currentProject.getDescription());
     }
 
+    private List<SampleItem> getSampleItemsForUsers(List<User> assignedUsers) {
+        List<User> users = LoginView.usuarios;
+        List<SampleItem> sampleItems = new ArrayList<>();
+    
+        for (User usr : users) {
+            sampleItems.add(new SampleItem(usr.getUsername(), usr.getUsername(), assignedUsers.contains(usr)));
+        }
+    
+        return sampleItems;
+    }
+    
+
+    private SampleItem getSampleItemForStatus(String status) {
+        List<SampleItem> sampleItems = new ArrayList<>();
+        sampleItems.add(new SampleItem("No iniciado", "No iniciado", "No iniciado".equals(status)));
+        sampleItems.add(new SampleItem("En progreso", "En progreso", "En progreso".equals(status)));
+        sampleItems.add(new SampleItem("Finalizado", "Finalizado", "Finalizado".equals(status)));
+
+        return sampleItems.stream().filter(item -> item.disabled()).findFirst().orElse(null);
+    }
 
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
         List<User> users = LoginView.usuarios;
@@ -107,55 +144,54 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         for(User usr : users){
             sampleItems.add(new SampleItem(usr.getUsername(), usr.getUsername(), null));
         }
-
         multiSelectComboBox.setItems(sampleItems);
         multiSelectComboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
     }
 
-    private void setComboBoxSampleData(ComboBox comboBox) {
+    private void setComboBoxSampleData(ComboBox comboBox, String currentEstado) {
         List<SampleItem> sampleItems = new ArrayList<>();
-        sampleItems.add(new SampleItem("No iniciado", "No iniciado", null));
-        sampleItems.add(new SampleItem("En progreso", "En progreso",  null));
-        sampleItems.add(new SampleItem("Finalizado", "Finalizado",  Boolean.TRUE));
+        sampleItems.add(new SampleItem("No iniciado", "No iniciado", "No iniciado".equals(currentEstado)));
+        sampleItems.add(new SampleItem("En progreso", "En progreso", "En progreso".equals(currentEstado)));
+        sampleItems.add(new SampleItem("Finalizado", "Finalizado", "Finalizado".equals(currentEstado)));
         comboBox.setItems(sampleItems);
         comboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
     }
+    
+    
 
     private void onButtonPrimaryClick() {
-        String taskName = textField.getValue();
+        // Access the values from the form components
+        String nombreProyecto = textField.getValue();
+        LocalDate fechaEntrega = datePicker.getValue();
         Set<SampleItem> estudiantesSeleccionados = multiSelectComboBox.getValue();
         List<User> usuariosAsignados = new ArrayList<>();
-        for(SampleItem usr : estudiantesSeleccionados){
+        for (SampleItem usr : estudiantesSeleccionados) {
             User myUser = LoginView.getUser(usr.value);
-            if(myUser.getUsername() != ""){
+            if (myUser.getUsername() != "") {
                 usuariosAsignados.add(myUser);
             }
         }
         Object estadoSeleccionado = comboBox.getValue();
         String estado = "";
-        if(estadoSeleccionado instanceof SampleItem) {
+        if (estadoSeleccionado instanceof SampleItem) {
             SampleItem myEstado = (SampleItem) estadoSeleccionado;
-
             estado = myEstado.value();
-
-            System.out.println("Estado Seleccionado Value: " + estado);
         } else {
             System.out.println("Unexpected value type");
         }
+        String descripcion = textArea.getValue();
 
-        String taskText = textArea.getValue();
-        
-        List<Comment> newComments = new ArrayList<>();
+        // Update the current project with the edited values
+        MainLayout.project.setProjectName(nombreProyecto);
+        MainLayout.project.setDueDate(fechaEntrega);
+        MainLayout.project.setAssignedUsers(usuariosAsignados);
+        MainLayout.project.setEstado(estado);
+        MainLayout.project.setDescription(descripcion);
 
-        Task newTask = new Task(taskName, taskText, LocalDate.now(), usuariosAsignados, estado, newComments);
+        buttonPrimary.getUI().ifPresent(e -> navigateToProject());
+    }
 
-        if(MainLayout.project.addTask(newTask)) {
-            // retorna true cuando si agrega la nueva tarea
-        } else {
-
-        }
-
-        // modificar funcionalidad de navegacion del boton
-        buttonPrimary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
+    public void navigateToProject() {
+        getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
 }

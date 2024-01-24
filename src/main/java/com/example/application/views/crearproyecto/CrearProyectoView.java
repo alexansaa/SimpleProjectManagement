@@ -33,7 +33,6 @@ import java.util.Set;
 
 @PageTitle("Crear Proyecto")
 @Route(value = "crear-proyecto")
-@RolesAllowed("ADMIN")
 @Uses(Icon.class)
 public class CrearProyectoView extends Composite<VerticalLayout> {
     private boolean volverMenu = HomeView.volverMenu;

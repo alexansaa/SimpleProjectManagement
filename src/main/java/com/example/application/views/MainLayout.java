@@ -119,6 +119,10 @@ public class MainLayout extends AppLayout {
                 LoginView.manipulator.saveData();
                 getUI().ifPresent(ui -> ui.navigate("login"));
             });
+                userName.getSubMenu().addItem("Reset", e -> {
+                    LoginView.manipulator.saveData();
+                    getUI().ifPresent(ui -> ui.navigate("login"));
+                });
 
             layout.add(userMenu);
         } else {

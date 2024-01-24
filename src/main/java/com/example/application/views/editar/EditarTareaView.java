@@ -1,21 +1,20 @@
-package com.example.application.views.creartarea;
+package com.example.application.views.editar;
 
 import com.example.application.data.Comment;
-import com.example.application.data.Project;
 import com.example.application.data.Task;
 import com.example.application.data.User;
 import com.example.application.views.MainLayout;
 import com.example.application.views.login.LoginView;
+import com.example.application.views.proyecto.ProyectoView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -24,42 +23,40 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
-import javassist.tools.reflect.Sample;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@PageTitle("Crear Tarea")
-@Route(value = "crear-tarea", layout = MainLayout.class)
+@PageTitle("Editar Tarea")
+@Route(value = "editar-tarea", layout = MainLayout.class)
 @Uses(Icon.class)
-public class CrearTareaView extends Composite<VerticalLayout> {
+public class EditarTareaView extends Composite<VerticalLayout> {
 
-    VerticalLayout layoutColumn2 = new VerticalLayout();
-    FormLayout formLayout2Col = new FormLayout();
-    TextField textField = new TextField();
-    FormLayout formLayout2Col2 = new FormLayout();
-    MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
-    ComboBox comboBox = new ComboBox();
-    TextArea textArea = new TextArea();
-    HorizontalLayout layoutRow = new HorizontalLayout();
-    Button buttonPrimary = new Button();
-    Button buttonSecondary = new Button();
+    private final VerticalLayout layoutColumn2 = new VerticalLayout();
+    private final FormLayout formLayout2Col = new FormLayout();
+    private final TextField textField = new TextField();
+    private final FormLayout formLayout2Col2 = new FormLayout();
+    private final MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
+    private final ComboBox comboBox = new ComboBox();
+    private final TextArea textArea = new TextArea();
+    private final HorizontalLayout layoutRow = new HorizontalLayout();
+    private final Button buttonPrimary = new Button();
+    private final Button buttonSecondary = new Button();
 
     record SampleItem(String value, String label, Boolean disabled) {
     }
 
-    public CrearTareaView() {
+    public EditarTareaView() {
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
-        getContent().setJustifyContentMode(JustifyContentMode.CENTER);
-        getContent().setAlignItems(Alignment.CENTER);
+        getContent().setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        getContent().setAlignItems(FlexComponent.Alignment.CENTER);
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("500px");
-        layoutColumn2.setJustifyContentMode(JustifyContentMode.CENTER);
-        layoutColumn2.setAlignItems(Alignment.CENTER);
+        layoutColumn2.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        layoutColumn2.setAlignItems(FlexComponent.Alignment.CENTER);
         formLayout2Col.setWidth("100%");
         textField.setLabel("Nombre de la tarea");
         formLayout2Col2.setWidth("100%");
@@ -75,12 +72,12 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
-        layoutRow.setAlignItems(Alignment.CENTER);
-        layoutRow.setJustifyContentMode(JustifyContentMode.CENTER);
-        buttonPrimary.setText("Crear");
+        layoutRow.setAlignItems(FlexComponent.Alignment.CENTER);
+        layoutRow.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        buttonPrimary.setText("Editar");
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonPrimary.addClickListener((event)->onButtonPrimaryClick());
+        buttonPrimary.addClickListener((event) -> onButtonPrimaryClick());
         buttonSecondary.setText("Volver");
         buttonSecondary.setWidth("min-content");
         buttonSecondary.addClickListener(e -> {
@@ -96,8 +93,14 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
-    }
 
+        // Llenar los campos con la información actual de la tarea seleccionada para editar
+        Task currentTask = ProyectoView.tarea;
+        textField.setValue(currentTask.getTaskName());
+        multiSelectComboBox.setValue(getSampleItemsForUsers(currentTask.getAssignedUsers()));
+        comboBox.setValue(getSampleItemForStatus(currentTask.getTaskStatus()));
+        textArea.setValue(currentTask.getDescription());
+    }
 
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
         List<User> users = LoginView.usuarios;
@@ -121,6 +124,26 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         comboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
     }
 
+    private List<SampleItem> getSampleItemsForUsers(List<User> assignedUsers) {
+        List<User> users = LoginView.usuarios;
+        List<SampleItem> sampleItems = new ArrayList<>();
+
+        for (User usr : users) {
+            sampleItems.add(new SampleItem(usr.getUsername(), usr.getUsername(), assignedUsers.contains(usr)));
+        }
+
+        return sampleItems;
+    }
+
+    private SampleItem getSampleItemForStatus(String status) {
+        List<SampleItem> sampleItems = new ArrayList<>();
+        sampleItems.add(new SampleItem("No iniciado", "No iniciado", "No iniciado".equals(status)));
+        sampleItems.add(new SampleItem("En progreso", "En progreso", "En progreso".equals(status)));
+        sampleItems.add(new SampleItem("Finalizado", "Finalizado", "Finalizado".equals(status)));
+
+        return sampleItems.stream().filter(item -> item.disabled()).findFirst().orElse(null);
+    }
+
     private void onButtonPrimaryClick() {
         String taskName = textField.getValue();
         Set<SampleItem> estudiantesSeleccionados = multiSelectComboBox.getValue();
@@ -135,27 +158,23 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         String estado = "";
         if(estadoSeleccionado instanceof SampleItem) {
             SampleItem myEstado = (SampleItem) estadoSeleccionado;
-
             estado = myEstado.value();
-
-            System.out.println("Estado Seleccionado Value: " + estado);
         } else {
             System.out.println("Unexpected value type");
         }
 
         String taskText = textArea.getValue();
-        
-        List<Comment> newComments = new ArrayList<>();
 
-        Task newTask = new Task(taskName, taskText, LocalDate.now(), usuariosAsignados, estado, newComments);
+        // Actualizar la tarea seleccionada con los valores editados
+        ProyectoView.tarea.setTaskName(taskName);
+        ProyectoView.tarea.setAssignedUsers(usuariosAsignados);
+        ProyectoView.tarea.setTaskStatus(estado);
+        ProyectoView.tarea.setDescription(taskText);
 
-        if(MainLayout.project.addTask(newTask)) {
-            // retorna true cuando si agrega la nueva tarea
-        } else {
+        buttonPrimary.getUI().ifPresent(e -> navigateToProject());
+    }
 
-        }
-
-        // modificar funcionalidad de navegacion del boton
-        buttonPrimary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
+    public void navigateToProject() {
+        getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
 }
