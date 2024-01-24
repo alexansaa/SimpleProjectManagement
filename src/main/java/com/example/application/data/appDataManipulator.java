@@ -162,6 +162,25 @@ public class appDataManipulator {
         this.appProjects.add(project);
     }
 
+    public void updateProject(Project newProject){
+        for(Project proj : this.appProjects){
+            if(proj.getProjectName().equals(newProject.getProjectName())){
+                proj = newProject;
+                return;
+            }
+        }
+    }
+
+    public void deleteProject(Project project){
+        for(Project proj : this.appProjects){
+            if(proj.getProjectName().equals(project.getProjectName())){
+                int index = this.appProjects.indexOf(proj);
+                this.appProjects.remove(index);
+                return;
+            }
+        }
+    }
+
     private List<Object> mockData() {
         // Creo usuarios
         User user1 = new User("Usuario1", "Pass1", "Profesor");
