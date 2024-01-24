@@ -27,18 +27,22 @@ import java.util.List;
 @Uses(Icon.class)
 public class CrearTareaView extends Composite<VerticalLayout> {
 
+    VerticalLayout layoutColumn2 = new VerticalLayout();
+    FormLayout formLayout2Col = new FormLayout();
+    TextField textField = new TextField();
+    DatePicker datePicker = new DatePicker();
+    FormLayout formLayout2Col2 = new FormLayout();
+    MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
+    ComboBox comboBox = new ComboBox();
+    TextArea textArea = new TextArea();
+    HorizontalLayout layoutRow = new HorizontalLayout();
+    Button buttonPrimary = new Button();
+    Button buttonSecondary = new Button();
+    
+    record SampleItem(String value, String label, Boolean disabled) {
+    }
+
     public CrearTareaView() {
-        VerticalLayout layoutColumn2 = new VerticalLayout();
-        FormLayout formLayout2Col = new FormLayout();
-        TextField textField = new TextField();
-        DatePicker datePicker = new DatePicker();
-        FormLayout formLayout2Col2 = new FormLayout();
-        MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
-        ComboBox comboBox = new ComboBox();
-        TextArea textArea = new TextArea();
-        HorizontalLayout layoutRow = new HorizontalLayout();
-        Button buttonPrimary = new Button();
-        Button buttonSecondary = new Button();
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(JustifyContentMode.CENTER);
@@ -87,8 +91,6 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         layoutRow.add(buttonSecondary);
     }
 
-    record SampleItem(String value, String label, Boolean disabled) {
-    }
 
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
         List<SampleItem> sampleItems = new ArrayList<>();
