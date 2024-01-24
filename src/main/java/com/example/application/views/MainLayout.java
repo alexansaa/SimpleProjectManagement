@@ -111,8 +111,8 @@ public class MainLayout extends AppLayout {
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
             userName.getSubMenu().addItem("Cerrar sesión", e -> {
-                getUI().ifPresent(ui -> ui.navigate("login"));
                 LoginView.manipulator.saveData();
+                getUI().ifPresent(ui -> ui.navigate("login"));
             });
 
             layout.add(userMenu);
