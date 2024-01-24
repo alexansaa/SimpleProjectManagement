@@ -2,13 +2,7 @@ package com.example.application.views;
 
 import com.example.application.data.Project;
 import com.example.application.data.User;
-import com.example.application.views.crearproyecto.CrearProyectoView;
-import com.example.application.views.creartarea.CrearTareaView;
-import com.example.application.views.home.HomeView;
 import com.example.application.views.login.LoginView;
-import com.example.application.views.nuevocomentario.NuevoComentarioView;
-import com.example.application.views.proyecto.ProyectoView;
-import com.example.application.views.tarea.TareaView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -20,28 +14,14 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.Scroller;
-import com.vaadin.flow.component.sidenav.SideNav;
-import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import java.io.ByteArrayInputStream;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import com.vaadin.flow.component.button.Button;
 
-
-import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -132,6 +112,7 @@ public class MainLayout extends AppLayout {
             userName.add(div);
             userName.getSubMenu().addItem("Cerrar sesión", e -> {
                 getUI().ifPresent(ui -> ui.navigate("login"));
+                LoginView.manipulator.saveData();
             });
 
             layout.add(userMenu);
