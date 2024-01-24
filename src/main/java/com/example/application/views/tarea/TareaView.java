@@ -189,7 +189,14 @@ public class TareaView extends Composite<VerticalLayout> {
         menuBar.addItem("Editar Tarea", e -> {
             menuBar.getUI().ifPresent(ui -> ui.navigate("editar-tarea"));
         });
-        menuBar.addItem("Eliminar Tarea");
+        menuBar.addItem("Eliminar Tarea", e -> {
+            eliminarTarea();
+        });
+    }
+
+    private void eliminarTarea(){
+        MainLayout.project.deleteTask(ProyectoView.tarea);
+        getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
 
     private void setMessageListSampleData(MessageList messageList) {
