@@ -54,6 +54,9 @@ public class NuevoComentarioView extends Composite<VerticalLayout> {
         buttonSecondary.setText("Volver");
         layoutRow.setAlignSelf(FlexComponent.Alignment.START, buttonSecondary);
         buttonSecondary.setWidth("min-content");
+        buttonSecondary.addClickListener(e -> {
+            buttonSecondary.getUI().ifPresent(ui -> ui.navigate("tarea"));
+        });
         getContent().add(textArea);
         getContent().add(layoutRow);
         layoutRow.add(buttonPrimary);

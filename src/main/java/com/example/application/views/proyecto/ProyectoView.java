@@ -36,7 +36,7 @@ public class ProyectoView extends Composite<VerticalLayout> {
 
     private Project project =  MainLayout.project;
     private List<Task> tasks = project.getTaskList();
-    private Task tarea = new Task();
+    public static Task tarea = new Task();
     private User usuario = LoginView.usuario;
 
     public ProyectoView() {
@@ -187,7 +187,7 @@ public class ProyectoView extends Composite<VerticalLayout> {
     }
 
     private void navigateToTask(Task task) {  
-        this.tarea = task;
+        tarea = task;
         getUI().ifPresent(ui -> ui.navigate("proyecto"));
         getUI().ifPresent(ui -> ui.navigate("tarea"));
     }
