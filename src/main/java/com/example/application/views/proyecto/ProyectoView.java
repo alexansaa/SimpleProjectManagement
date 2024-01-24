@@ -4,6 +4,7 @@ import com.example.application.data.Project;
 import com.example.application.data.Task;
 import com.example.application.data.User;
 import com.example.application.views.MainLayout;
+import com.example.application.views.home.HomeView;
 import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -192,8 +193,10 @@ public class ProyectoView extends Composite<VerticalLayout> {
     }
 
     private void setMenuBarSampleData(MenuBar menuBar) {
-        menuBar.addItem("Editar");
-        menuBar.addItem("Eliminar");
-        menuBar.addItem("Crear", e -> getUI().ifPresent(ui -> ui.navigate("crear-proyecto")));
+        HomeView.volverMenu = false;
+        menuBar.addItem("Editar Proyecto");
+        menuBar.addItem("Eliminar Proyecto");
+        menuBar.addItem("Crear Nuevo Proyecto", e -> getUI().ifPresent(ui -> ui.navigate("crear-proyecto")));
+        menuBar.addItem("Crear Tarea", e -> getUI().ifPresent(ui -> ui.navigate("crear-tarea")));
     }
 }

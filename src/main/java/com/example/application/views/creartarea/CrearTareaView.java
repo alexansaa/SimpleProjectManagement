@@ -79,7 +79,7 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         buttonSecondary.setText("Volver");
         buttonSecondary.setWidth("min-content");
         buttonSecondary.addClickListener(e -> {
-            buttonSecondary.getUI().ifPresent(ui -> ui.navigate("tarea"));
+            buttonSecondary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
         });
         getContent().add(layoutColumn2);
         layoutColumn2.add(formLayout2Col);

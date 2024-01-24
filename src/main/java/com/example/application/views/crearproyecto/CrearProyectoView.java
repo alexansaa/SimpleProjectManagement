@@ -178,6 +178,7 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
             fechaEntrega, descripcion, usuariosAsignados, LoginView.usuario, newTasks,
             estado);
         LoginView.addProject(newProject);
+    
         buttonPrimary.getUI().ifPresent(ui -> ui.navigate("home"));
     }
 }

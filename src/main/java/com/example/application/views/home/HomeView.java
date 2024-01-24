@@ -1,7 +1,9 @@
 package com.example.application.views.home;
 
+import com.example.application.data.User;
 import com.example.application.views.MainLayout;
 import com.example.application.views.crearproyecto.CrearProyectoView;
+import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -22,6 +24,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Uses(Icon.class)
 public class HomeView extends Composite<VerticalLayout> {
     public static boolean volverMenu = false;
+    private User usuario = LoginView.usuario;
 
     public HomeView() {
         H1 h1 = new H1();
@@ -41,6 +44,8 @@ public class HomeView extends Composite<VerticalLayout> {
             buttonPrimary.getUI().ifPresent(ui -> ui.navigate("crear-proyecto"));
         });
         getContent().add(h1);
-        getContent().add(buttonPrimary);
+        if (usuario.getRole().equals("Profesor")){
+            getContent().add(buttonPrimary);
+        }
     }
 }
