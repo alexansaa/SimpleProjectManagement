@@ -62,6 +62,7 @@ public class LoginView extends Composite<VerticalLayout> {
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         getContent().setAlignItems(FlexComponent.Alignment.CENTER);
+        getContent().getStyle().set("height", "100vh");
 
         h2.setText("Inicio de Sesión");
         h2.setWidth("max-content");
