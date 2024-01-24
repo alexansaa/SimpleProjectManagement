@@ -19,8 +19,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @PageTitle("Crear Tarea")
 @Route(value = "crear-tarea", layout = MainLayout.class)
@@ -38,7 +41,7 @@ public class CrearTareaView extends Composite<VerticalLayout> {
     HorizontalLayout layoutRow = new HorizontalLayout();
     Button buttonPrimary = new Button();
     Button buttonSecondary = new Button();
-    
+
     record SampleItem(String value, String label, Boolean disabled) {
     }
 
@@ -110,5 +113,20 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         sampleItems.add(new SampleItem("fourth", "Fourth", null));
         comboBox.setItems(sampleItems);
         comboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
+    }
+
+    private void onButtonPrimaryClick() {
+        TextField textField = new TextField();
+        DatePicker datePicker = new DatePicker();
+        MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
+        ComboBox comboBox = new ComboBox();
+        TextArea textArea = new TextArea();
+
+        String taskName = textField.getValue();
+        LocalDate fecha = datePicker.getValue();
+        Set<SampleItem> estudiantesSeleccionados = multiSelectComboBox.getValue();
+        // String combo = comboBox.getValue();
+        String text = textArea.getValue();
+        
     }
 }

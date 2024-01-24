@@ -25,7 +25,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import jakarta.annotation.security.RolesAllowed;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,10 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
     HorizontalLayout layoutRow = new HorizontalLayout();
     Button buttonPrimary = new Button();
     Button buttonSecondary = new Button();
-
+    
+    record SampleItem(String value, String label, Boolean disabled) {
+    }
+    
     public CrearProyectoView() {
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
@@ -105,8 +107,6 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         layoutRow.add(buttonSecondary);
     }
 
-    record SampleItem(String value, String label, Boolean disabled) {
-    }
 
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
         List<User> users = LoginView.usuarios;
