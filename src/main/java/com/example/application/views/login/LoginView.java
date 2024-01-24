@@ -137,4 +137,25 @@ public class LoginView extends Composite<VerticalLayout> {
         projects.add(project);
         manipulator.addProject(project);
     }
+
+    public static void editProject(Project newProject){
+        for(Project proj : projects) {
+            if(proj.getProjectName().equals(newProject.getProjectName())){
+                proj = newProject;
+                LoginView.manipulator.updateProject(newProject);
+                return;
+            }
+        }
+    }
+
+    public static void deleteProject(Project project){
+        for(Project proj : projects){
+            if(proj.getProjectName().equals(project.getProjectName())){
+                int index = projects.indexOf(proj);
+                projects.remove(index);
+                LoginView.manipulator.deleteProject(project);
+                return;
+            }
+        }
+    }
 }
