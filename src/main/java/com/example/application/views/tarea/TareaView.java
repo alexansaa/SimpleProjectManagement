@@ -30,6 +30,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -190,14 +191,21 @@ public class TareaView extends Composite<VerticalLayout> {
     }
 
     private void setMessageListSampleData(MessageList messageList) {
-    Random random = new Random();
-
-    for (Comment comment : comments) {
-        MessageListItem message = new MessageListItem(comment.getText(), 
-            comment.getCommentDate().atStartOfDay().toInstant(ZoneOffset.UTC),
-            comment.getOwner().getUsername());
-        message.setUserColorIndex(random.nextInt(14) + 1); // Números aleatorios entre 1 y 14
-        messageList.setItems(message);
+        Random random = new Random();
+    
+        List<MessageListItem> messageItems = new ArrayList<>();
+    
+        for (Comment comment : comments) {
+            MessageListItem message = new MessageListItem(comment.getText(), 
+                comment.getCommentDate().atStartOfDay().toInstant(ZoneOffset.UTC),
+                comment.getOwner().getUsername());
+            message.setUserColorIndex(random.nextInt(14) + 1); // Números aleatorios entre 1 y 14
+            messageItems.add(message);
+        }
+    
+        messageList.setItems(messageItems.toArray(new MessageListItem[0]));
     }
-}
+    
+
+    
 }
