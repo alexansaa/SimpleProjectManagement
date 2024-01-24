@@ -22,7 +22,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 @PageTitle("Nuevo Comentario")
-@Route(value = "crear-comentario", layout = MainLayout.class)
+@Route(value = "crear-comentario")
 @Uses(Icon.class)
 public class NuevoComentarioView extends Composite<VerticalLayout> {
     TextArea textArea = new TextArea();
@@ -69,5 +69,7 @@ public class NuevoComentarioView extends Composite<VerticalLayout> {
         Comment newComment = new Comment(LoginView.usuario, textoComentario, LocalDate.now());
 
         ProyectoView.tarea.addComment(newComment);
+        
+        getUI().ifPresent(ui -> ui.navigate("tarea"));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.application.views.tarea;
 
+import com.example.application.data.Comment;
 import com.example.application.data.Task;
 import com.example.application.data.User;
 import com.example.application.views.MainLayout;
@@ -29,6 +30,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @PageTitle("Tarea")
@@ -38,8 +41,11 @@ public class TareaView extends Composite<VerticalLayout> {
 
     private User usuario = LoginView.usuario;
     private Task tarea = ProyectoView.tarea;
+    private List<Comment> comments = tarea.getComments();
+
 
     public TareaView() {
+        System.out.println(comments);
         VerticalLayout layoutColumn2 = new VerticalLayout();
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
@@ -184,13 +190,14 @@ public class TareaView extends Composite<VerticalLayout> {
     }
 
     private void setMessageListSampleData(MessageList messageList) {
-        MessageListItem message1 = new MessageListItem("Nature does not hurry, yet everything gets accomplished.",
-                LocalDateTime.now().minusDays(1).toInstant(ZoneOffset.UTC), "Matt Mambo");
-        message1.setUserColorIndex(1);
-        MessageListItem message2 = new MessageListItem(
-                "Using your talent, hobby or profession in a way that makes you contribute with something good to this world is truly the way to go.",
-                LocalDateTime.now().minusMinutes(55).toInstant(ZoneOffset.UTC), "Linsey Listy");
-        message2.setUserColorIndex(2);
-        messageList.setItems(message1, message2);
+    Random random = new Random();
+
+    for (Comment comment : comments) {
+        MessageListItem message = new MessageListItem(comment.getText(), 
+            comment.getCommentDate().atStartOfDay().toInstant(ZoneOffset.UTC),
+            comment.getOwner().getUsername());
+        message.setUserColorIndex(random.nextInt(14) + 1); // Números aleatorios entre 1 y 14
+        messageList.setItems(message);
     }
+}
 }
