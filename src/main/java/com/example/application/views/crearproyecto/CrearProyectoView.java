@@ -4,6 +4,7 @@ import com.example.application.data.Project;
 import com.example.application.data.Task;
 import com.example.application.data.User;
 import com.example.application.views.MainLayout;
+import com.example.application.views.home.HomeView;
 import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -35,6 +36,8 @@ import java.util.Set;
 @RolesAllowed("ADMIN")
 @Uses(Icon.class)
 public class CrearProyectoView extends Composite<VerticalLayout> {
+    private boolean volverMenu = HomeView.volverMenu;
+
     VerticalLayout layoutColumn2 = new VerticalLayout();
     VerticalLayout layoutColumn3 = new VerticalLayout();
     FormLayout formLayout2Col = new FormLayout();
@@ -89,9 +92,15 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         buttonPrimary.addClickListener((event -> onButtonPrimaryClick()));
         
         buttonSecondary.setText("Volver");
-        buttonSecondary.addClickListener(e -> {
-            buttonSecondary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
-        });
+        if (volverMenu) {
+            buttonSecondary.addClickListener(e -> {
+                buttonSecondary.getUI().ifPresent(ui -> ui.navigate("home"));
+            });
+        } else {
+            buttonSecondary.addClickListener(e -> {
+                buttonSecondary.getUI().ifPresent(ui -> ui.navigate("proyecto"));
+            });
+        }
         buttonSecondary.setWidth("min-content");
         getContent().add(layoutColumn2);
         layoutColumn2.add(layoutColumn3);
@@ -169,5 +178,6 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
             fechaEntrega, descripcion, usuariosAsignados, LoginView.usuario, newTasks,
             estado);
         LoginView.addProject(newProject);
+        buttonPrimary.getUI().ifPresent(ui -> ui.navigate("home"));
     }
 }
