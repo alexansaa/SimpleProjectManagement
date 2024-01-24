@@ -89,7 +89,7 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         buttonPrimary.setText("Crear");
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonPrimary.addClickListener((event -> onButtonPrimaryClick()));
+        buttonPrimary.addClickListener((event) -> onButtonPrimaryClick());
         
         buttonSecondary.setText("Volver");
         if (volverMenu) {
