@@ -130,24 +130,26 @@ public class LoginView extends Composite<VerticalLayout> {
         return new User();
     }
 
-    public static void addProject(Project project) {
+    public static boolean addProject(Project project) {
         for(Project proj : projects) {
             if(proj.getProjectName().equals(project.getProjectName())){
                 Notification.show("No se puede crear el proyecto. Ya existe un proyecto con el mismo nombre.", 3000, Position.TOP_CENTER);
-                return;
+                return false;
             }
         }
 
         projects.add(project);
         manipulator.addProject(project);
         MainLayout.project = project;
+
+        return true;
     }
 
     public static void editProject(Project newProject){
         for(Project proj : projects) {
             if(proj.getProjectName().equals(newProject.getProjectName())){
                 proj = newProject;
-                LoginView.manipulator.updateProject(newProject);
+                manipulator.updateProject(newProject);
                 return;
             }
         }
@@ -158,7 +160,7 @@ public class LoginView extends Composite<VerticalLayout> {
             if(proj.getProjectName().equals(project.getProjectName())){
                 int index = projects.indexOf(proj);
                 projects.remove(index);
-                LoginView.manipulator.deleteProject(project);
+                manipulator.deleteProject(project);
                 return;
             }
         }

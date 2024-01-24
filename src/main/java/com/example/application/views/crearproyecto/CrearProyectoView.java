@@ -116,7 +116,6 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         layoutRow.add(buttonSecondary);
     }
 
-
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
         List<User> users = LoginView.usuarios;
 
@@ -177,7 +176,11 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         Project newProject = new Project(nombreProyecto, LocalDate.now(),
             fechaEntrega, descripcion, usuariosAsignados, LoginView.usuario, newTasks,
             estado);
-        LoginView.addProject(newProject);
+        if(LoginView.addProject(newProject)) {
+            // retorna true cuand si agrega el nuevo proyecto
+        } else {
+            
+        }
     
         buttonPrimary.getUI().ifPresent(e -> navigateToProject(newProject));
     }

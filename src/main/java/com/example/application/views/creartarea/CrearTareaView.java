@@ -1,6 +1,11 @@
 package com.example.application.views.creartarea;
 
+import com.example.application.data.Comment;
+import com.example.application.data.Project;
+import com.example.application.data.Task;
+import com.example.application.data.User;
 import com.example.application.views.MainLayout;
+import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,6 +24,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+
+import javassist.tools.reflect.Sample;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -76,6 +83,7 @@ public class CrearTareaView extends Composite<VerticalLayout> {
         buttonPrimary.setText("Crear");
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonPrimary.addClickListener((event)->onButtonPrimaryClick());
         buttonSecondary.setText("Volver");
         buttonSecondary.setWidth("min-content");
         buttonSecondary.addClickListener(e -> {
@@ -96,42 +104,69 @@ public class CrearTareaView extends Composite<VerticalLayout> {
 
 
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
+        List<User> users = LoginView.usuarios;
+
         List<SampleItem> sampleItems = new ArrayList<>();
-        sampleItems.add(new SampleItem("first", "First", null));
-        sampleItems.add(new SampleItem("second", "Second", null));
-        sampleItems.add(new SampleItem("third", "Third", Boolean.TRUE));
-        sampleItems.add(new SampleItem("fourth", "Fourth", null));
+
+        for(User usr : users){
+            sampleItems.add(new SampleItem(usr.getUsername(), usr.getUsername(), null));
+        }
+
         multiSelectComboBox.setItems(sampleItems);
         multiSelectComboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
     }
 
     private void setComboBoxSampleData(ComboBox comboBox) {
         List<SampleItem> sampleItems = new ArrayList<>();
-        sampleItems.add(new SampleItem("first", "First", null));
-        sampleItems.add(new SampleItem("second", "Second", null));
-        sampleItems.add(new SampleItem("third", "Third", Boolean.TRUE));
-        sampleItems.add(new SampleItem("fourth", "Fourth", null));
+        sampleItems.add(new SampleItem("No iniciado", "No iniciado", null));
+        sampleItems.add(new SampleItem("En progreso", "En progreso",  null));
+        sampleItems.add(new SampleItem("Finalizado", "Finalizado",  Boolean.TRUE));
         comboBox.setItems(sampleItems);
         comboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
     }
 
     private void onButtonPrimaryClick() {
-        TextField textField = new TextField();
-        DatePicker datePicker = new DatePicker();
-        MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
-        ComboBox comboBox = new ComboBox();
-        TextArea textArea = new TextArea();
-
         String taskName = textField.getValue();
-        LocalDate fecha = datePicker.getValue();
+        LocalDate fechaEntrega = datePicker.getValue();
         Set<SampleItem> estudiantesSeleccionados = multiSelectComboBox.getValue();
-        // String combo = comboBox.getValue();
-        String text = textArea.getValue();
+        List<User> usuariosAsignados = new ArrayList<>();
+        for(SampleItem usr : estudiantesSeleccionados){
+            User myUser = LoginView.getUser(usr.value);
+            if(myUser.getUsername() != ""){
+                usuariosAsignados.add(myUser);
+            }
+        }
+        Object estadoSeleccionado = comboBox.getValue();
+        String estado = "";
+        if(estadoSeleccionado instanceof SampleItem) {
+            SampleItem myEstado = (SampleItem) estadoSeleccionado;
+
+            estado = myEstado.value();
+
+            System.out.println("Estado Seleccionado Value: " + estado);
+        } else {
+            System.out.println("Unexpected value type");
+        }
+
+        String taskText = textArea.getValue();
         
-        System.out.println(textField);
-        System.out.println(datePicker);
-        System.out.println(multiSelectComboBox);
-        System.out.println(comboBox);
-        System.out.println(textArea);
+        System.out.println("Nombre tarea: " + taskName);
+        System.out.println("Fecha entrega: " + fechaEntrega);
+        System.out.println("Estudiantes asignados: " + estudiantesSeleccionados);
+        System.out.println("Estado: " + estado);
+        System.out.println("Descripcion: " + taskText);
+
+        List<Comment> newComments = new ArrayList<>();
+
+        Task newTask = new Task(taskName, taskText, LocalDate.now(), usuariosAsignados, estado, newComments);
+
+        if(MainLayout.project.addTask(newTask)) {
+            // retorna true cuando si agrega la nueva tarea
+        } else {
+
+        }
+
+        // modificar funcionalidad de navegacion del boton
+        // buttonPrimary.getUI().ifPresent(ui -> ui.navigate("home"));
     }
 }
