@@ -177,7 +177,11 @@ public class CrearProyectoView extends Composite<VerticalLayout> {
         Project newProject = new Project(nombreProyecto, LocalDate.now(),
             fechaEntrega, descripcion, usuariosAsignados, LoginView.usuario, newTasks,
             estado);
-        LoginView.addProject(newProject);
+        if(LoginView.addProject(newProject)) {
+            // retorna true cuand si agrega el nuevo proyecto
+        } else {
+            
+        }
     
         buttonPrimary.getUI().ifPresent(ui -> ui.navigate("home"));
     }

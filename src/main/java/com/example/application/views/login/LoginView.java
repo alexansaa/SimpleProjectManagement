@@ -127,15 +127,17 @@ public class LoginView extends Composite<VerticalLayout> {
         return new User();
     }
 
-    public static void addProject(Project project) {
+    public static boolean addProject(Project project) {
         for(Project proj : projects) {
             if(proj.getProjectName().equals(project.getProjectName())){
-                return;
+                return false;
             }
         }
 
         projects.add(project);
         manipulator.addProject(project);
+
+        return true;
     }
 
     public static void editProject(Project newProject){
