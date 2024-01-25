@@ -44,7 +44,6 @@ public class TareaView extends Composite<VerticalLayout> {
     private Task tarea = ProyectoView.tarea;
     private List<Comment> comments = tarea.getComments();
 
-
     public TareaView() {
         System.out.println(comments);
         VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -96,7 +95,7 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutColumn4.setAlignItems(Alignment.START);
         layoutColumn4.setAlignSelf(FlexComponent.Alignment.CENTER, menuBar);
         menuBar.setWidth("min-content");
-        if (usuario.getRole().equals("Profesor")){
+        if (usuario.getRole().equals("Profesor")) {
             setMenuBarSampleData(menuBar);
         }
         layoutRow2.setWidthFull();
@@ -194,27 +193,30 @@ public class TareaView extends Composite<VerticalLayout> {
         });
     }
 
-    private void eliminarTarea(){
+    private void eliminarTarea() {
         MainLayout.project.deleteTask(ProyectoView.tarea);
         getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
 
     private void setMessageListSampleData(MessageList messageList) {
         Random random = new Random();
-    
+
         List<MessageListItem> messageItems = new ArrayList<>();
-    
+
         for (Comment comment : comments) {
-            MessageListItem message = new MessageListItem(comment.getText(), 
-                comment.getCommentDate().atStartOfDay().toInstant(ZoneOffset.UTC),
-                comment.getOwner().getUsername());
+            
+            MessageListItem message = new MessageListItem(comment.getText(),
+                    comment.getCommentDate().atStartOfDay().toInstant(ZoneOffset.UTC),
+                    comment.getOwner().getUsername());
+
             message.setUserColorIndex(random.nextInt(14) + 1); // Números aleatorios entre 1 y 14
             messageItems.add(message);
         }
-    
-        messageList.setItems(messageItems.toArray(new MessageListItem[0]));
-    }
-    
 
-    
+        messageList.setItems(messageItems.toArray(new MessageListItem[0]));
+
+    }
+
+
+
 }
