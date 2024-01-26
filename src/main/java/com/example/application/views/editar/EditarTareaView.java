@@ -98,7 +98,8 @@ public class EditarTareaView extends Composite<VerticalLayout> {
         Task currentTask = ProyectoView.tarea;
         textField.setValue(currentTask.getTaskName());
         multiSelectComboBox.setValue(getSampleItemsForUsers(currentTask.getAssignedUsers()));
-        comboBox.setValue(getSampleItemForStatus(currentTask.getTaskStatus()));
+        SampleItem selectedItem = new SampleItem(currentTask.getTaskStatus(), currentTask.getTaskStatus(), false);
+        comboBox.setValue(selectedItem);
         textArea.setValue(currentTask.getDescription());
     }
 

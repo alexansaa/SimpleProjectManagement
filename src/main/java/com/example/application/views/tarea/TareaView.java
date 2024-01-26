@@ -6,7 +6,9 @@ import com.example.application.data.User;
 import com.example.application.views.MainLayout;
 import com.example.application.views.login.LoginView;
 import com.example.application.views.proyecto.ProyectoView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
@@ -43,13 +45,17 @@ public class TareaView extends Composite<VerticalLayout> {
     private User usuario = LoginView.usuario;
     private Task tarea = ProyectoView.tarea;
     private List<Comment> comments = tarea.getComments();
+    public static Comment comentario = new Comment();
+    private HorizontalLayout comentarios = new HorizontalLayout();
+    private VerticalLayout layoutColumn4 = new VerticalLayout();
+
 
     public TareaView() {
         System.out.println(comments);
+        
         VerticalLayout layoutColumn2 = new VerticalLayout();
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
-        VerticalLayout layoutColumn4 = new VerticalLayout();
         MenuBar menuBar = new MenuBar();
         HorizontalLayout layoutRow2 = new HorizontalLayout();
         H2 h2 = new H2();
@@ -95,6 +101,12 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutColumn4.setAlignItems(Alignment.START);
         layoutColumn4.setAlignSelf(FlexComponent.Alignment.CENTER, menuBar);
         menuBar.setWidth("min-content");
+
+        comentarios.addClassName(Gap.XSMALL);
+        comentarios.addClassName(Padding.XSMALL);
+        comentarios.setWidth("100%");
+        comentarios.getStyle().set("flex-grow", "1");
+
         if (usuario.getRole().equals("Profesor")) {
             setMenuBarSampleData(menuBar);
         }
@@ -140,7 +152,6 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutRow3.setWidth("100%");
         layoutRow3.getStyle().set("flex-grow", "1");
         messageList.setWidth("100%");
-        setMessageListSampleData(messageList);
         layoutRow4.setWidthFull();
         layoutColumn4.setFlexGrow(1.0, layoutRow4);
         layoutRow4.addClassName(Gap.MEDIUM);
@@ -178,10 +189,11 @@ public class TareaView extends Composite<VerticalLayout> {
         layoutColumn4.add(hr2);
         layoutColumn4.add(h32);
         layoutColumn4.add(layoutRow3);
-        layoutRow3.add(messageList);
         layoutColumn4.add(layoutRow4);
         layoutRow4.add(buttonPrimary);
         layoutRow4.add(buttonSecondary);
+
+        getContent().add(createBottomSection(messageList));
     }
 
     private void setMenuBarSampleData(MenuBar menuBar) {
@@ -198,7 +210,7 @@ public class TareaView extends Composite<VerticalLayout> {
         getUI().ifPresent(ui -> ui.navigate("proyecto"));
     }
 
-    private void setMessageListSampleData(MessageList messageList) {
+    private MessageList setMessageListSampleData(MessageList messageList) {
         Random random = new Random();
 
         List<MessageListItem> messageItems = new ArrayList<>();
@@ -212,9 +224,73 @@ public class TareaView extends Composite<VerticalLayout> {
             message.setUserColorIndex(random.nextInt(14) + 1); // Números aleatorios entre 1 y 14
             messageItems.add(message);
         }
-
         messageList.setItems(messageItems.toArray(new MessageListItem[0]));
+        return messageList;
 
+    }
+
+    private VerticalLayout botones() {
+        VerticalLayout botonesLayout = new VerticalLayout();
+        int i = 0;
+        for (Comment comment : comments) {
+            i += 1;
+            HorizontalLayout layoutRow = new HorizontalLayout();
+            Button editarButton = new Button("Editar Comentario " + i);
+            editarButton.setWidth("min-content");
+            editarButton.addClickListener(e -> {
+                editarComentario(comment);
+            });
+            Button eliminarButton = new Button("Eliminar Comentario " + i);
+            eliminarButton.setWidth("min-content");
+            eliminarButton.addClickListener(e -> {
+                eliminarComentario(comment);
+            });
+
+            layoutRow.add(editarButton, eliminarButton);
+            botonesLayout.add(layoutRow);
+        }
+
+        return botonesLayout;
+
+    }
+
+    private void editarComentario(Comment comment) {
+        comentario = comment;
+        getUI().ifPresent(ui -> ui.navigate("editar-comentario"));
+    }
+
+    private void eliminarComentario(Comment comment) {
+        ProyectoView.tarea.deleteComment(comment);
+        getUI().ifPresent(ui -> ui.navigate("proyecto"));
+        
+        getUI().ifPresentOrElse(
+        ui -> ui.navigate("tarea"), // Se ejecuta si el valor está presente
+        new Runnable() {
+            @Override
+            public void run() {
+                UI ui = UI.getCurrent();
+                if (ui != null) {
+                    ui.navigate("tarea");
+                }
+            }
+        } // Se ejecuta si el valor no está presente
+    );
+    }
+
+    private HorizontalLayout createBottomSection(MessageList messageList) {
+        HorizontalLayout bottomSection = new HorizontalLayout();
+    
+        bottomSection.add(setMessageListSampleData(messageList));
+    
+        // Agrega el VerticalLayout con botones a la segunda columna
+        if (LoginView.usuario.getRole().equals("Profesor")) {
+            VerticalLayout botonesLayout = new VerticalLayout();
+            botonesLayout.add(botones());
+            bottomSection.add(botonesLayout);
+        }
+        
+    
+        return bottomSection;
     }
 
 

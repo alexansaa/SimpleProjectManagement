@@ -15,6 +15,10 @@ public class Comment implements Serializable {
         this.commentDate = commentDate;
     }
 
+    public Comment() {
+        //TODO Auto-generated constructor stub
+    }
+
     // Getters
     public User getOwner() {
         return owner;

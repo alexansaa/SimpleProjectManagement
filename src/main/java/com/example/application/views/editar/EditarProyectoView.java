@@ -19,6 +19,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
@@ -26,8 +28,10 @@ import jakarta.annotation.security.RolesAllowed;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import com.vaadin.flow.data.provider.ListDataProvider;
 
 @PageTitle("Editar Proyecto")
 @Route(value = "editar-proyecto")
@@ -53,7 +57,7 @@ public class EditarProyectoView extends Composite<VerticalLayout> {
     public EditarProyectoView() {
 
         Project currentProject = MainLayout.project;
-        
+
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(JustifyContentMode.CENTER);
@@ -75,8 +79,7 @@ public class EditarProyectoView extends Composite<VerticalLayout> {
         multiSelectComboBox.setWidth("770px");
         setMultiSelectComboBoxSampleData(multiSelectComboBox);
         comboBox.setLabel("Estado");
-        comboBox.setWidth("min-content");
-        setComboBoxSampleData(comboBox, currentProject.getEstado());
+        comboBox.setWidth("min-content");  
         textArea.setLabel("Descripción");
         textArea.setWidth("100%");
         textArea.setHeight("300px");
@@ -102,13 +105,15 @@ public class EditarProyectoView extends Composite<VerticalLayout> {
         formLayout2Col.add(datePicker);
         layoutColumn3.add(formLayout2Col2);
         formLayout2Col2.add(multiSelectComboBox);
+        setComboBoxSampleData(comboBox, currentProject.getEstado());
+        SampleItem selectedItem = new SampleItem(currentProject.getEstado(), currentProject.getEstado(), false);
+        comboBox.setValue(selectedItem);
         formLayout2Col2.add(comboBox);
         layoutColumn3.add(textArea);
         layoutColumn3.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
 
-        
         textField.setValue(currentProject.getProjectName());
         datePicker.setValue(currentProject.getDueDate());
         multiSelectComboBox.setValue(getSampleItemsForUsers(currentProject.getAssignedUsers()));
@@ -118,22 +123,12 @@ public class EditarProyectoView extends Composite<VerticalLayout> {
     private List<SampleItem> getSampleItemsForUsers(List<User> assignedUsers) {
         List<User> users = LoginView.usuarios;
         List<SampleItem> sampleItems = new ArrayList<>();
-    
+
         for (User usr : users) {
             sampleItems.add(new SampleItem(usr.getUsername(), usr.getUsername(), assignedUsers.contains(usr)));
         }
-    
+
         return sampleItems;
-    }
-    
-
-    private SampleItem getSampleItemForStatus(String status) {
-        List<SampleItem> sampleItems = new ArrayList<>();
-        sampleItems.add(new SampleItem("No iniciado", "No iniciado", "No iniciado".equals(status)));
-        sampleItems.add(new SampleItem("En progreso", "En progreso", "En progreso".equals(status)));
-        sampleItems.add(new SampleItem("Finalizado", "Finalizado", "Finalizado".equals(status)));
-
-        return sampleItems.stream().filter(item -> item.disabled()).findFirst().orElse(null);
     }
 
     private void setMultiSelectComboBoxSampleData(MultiSelectComboBox multiSelectComboBox) {
@@ -141,23 +136,36 @@ public class EditarProyectoView extends Composite<VerticalLayout> {
 
         List<SampleItem> sampleItems = new ArrayList<>();
 
-        for(User usr : users){
+        for (User usr : users) {
             sampleItems.add(new SampleItem(usr.getUsername(), usr.getUsername(), null));
         }
         multiSelectComboBox.setItems(sampleItems);
         multiSelectComboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
     }
 
-    private void setComboBoxSampleData(ComboBox comboBox, String currentEstado) {
+    private void setComboBoxSampleData(ComboBox<SampleItem> comboBox, String currentEstado) {
         List<SampleItem> sampleItems = new ArrayList<>();
         sampleItems.add(new SampleItem("No iniciado", "No iniciado", "No iniciado".equals(currentEstado)));
         sampleItems.add(new SampleItem("En progreso", "En progreso", "En progreso".equals(currentEstado)));
         sampleItems.add(new SampleItem("Finalizado", "Finalizado", "Finalizado".equals(currentEstado)));
+
         comboBox.setItems(sampleItems);
-        comboBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
+        comboBox.setItemLabelGenerator(SampleItem::label);
+
+        // Selecciona el valor correspondiente al currentEstado si existe
+        System.out.println("Current estado: " + currentEstado);
+        SampleItem selectedItem = sampleItems.stream()
+            .filter(item -> item.value().equals(currentEstado))
+            .findAny()
+            .orElse(null);
+
+        System.out.println("Selected item: " + selectedItem);
+
+        if (selectedItem != null) {
+            comboBox.setValue(selectedItem);
+        }
+
     }
-    
-    
 
     private void onButtonPrimaryClick() {
         // Access the values from the form components

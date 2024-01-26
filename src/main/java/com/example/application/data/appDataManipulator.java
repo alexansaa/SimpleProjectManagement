@@ -204,8 +204,8 @@ public class appDataManipulator {
         myComments.add(comment4);
 
         // Creo tareas
-        Task task1 = new Task("Tarea 1", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
-        Task task2 = new Task("Tarea 2", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Done", myComments);
+        Task task1 = new Task("Tarea 1", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Finalizado", myComments);
+        Task task2 = new Task("Tarea 2", "Esta descripcion describe la tarea", LocalDate.now(), estudiantes, "Finalizado", myComments);
         List<Task> myTasks = new ArrayList<>();
         myTasks.add(task1);
         myTasks.add(task2);
