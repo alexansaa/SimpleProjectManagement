@@ -20,10 +20,12 @@
 - [🙏 Acknowledgements](#acknowledgements)
 - [📝 License](#license)
 
-# 📖 [Recipe app] <a name="about-project"></a>
+# 📖 [Simple Project Manager] <a name="about-project"></a>
 
-**[Recipe app]**
-The Recipe app keeps track of all your recipes, ingredients, and inventory. It will allow you to save ingredients, keep track of what you have, create recipes, and generate a shopping list based on what you have and what you are missing from a recipe. Built with Ruby on Rails.
+**[Simple Project Manager]**
+The Simple Project Manager app keeps track of all your projects, tasks, comments and users. It will allow you to create new projects, add new task to the project, assign users to tasks, and adding new comments to tasks. Users are managed also by the program, so the application is stand alone. You can create an executable file out of the raw code on this repo. 
+
+This application uses serialized local files to keep record of data stored. Instead of using al SpringBoot functionalities, this applications defines its own class for managing stored data into serialized files, which will map to objects arrays used by the application.
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -32,30 +34,26 @@ The Recipe app keeps track of all your recipes, ingredients, and inventory. It w
 <details>
   <summary>Client</summary>
   <ul>
-    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a></li>
-     <li><a href="https://developer.mozilla.org/en-US/docs/Web/css">CSS</a></li>
-  </ul>
-</details>
-
-<details>
-  <summary>Server</summary>
-  <ul>
-    <li><a href="https://guides.rubyonrails.org/">Rails</a></li>
-  </ul>
-</details>
-
-<details>
-<summary>Database</summary>
-  <ul>
-    <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+    <li><a href="https://www.java.com/es/download/ie_manual.jsp">Java</a></li>
+    <li><a href="https://spring.io/projects/spring-boot">Spring Boot</a></li>
+    <li><a href="https://vaadin.com/">Vaadin</a></li>
   </ul>
 </details>
 
 ### Key Features <a name="key-features"></a>
 
 - **[Models]**
+-- Comment
+-- Project
+-- Task
+-- User
 - **[Controllers]**
+-- appDtatManipulator
 - **[Views]**
+-- home
+-- login
+-- Create and Edit forms
+-- Projects, Tasks, Comments Pages
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -67,9 +65,7 @@ To get a local copy up and running, follow these steps.
 
 In order to run this project you need:
 
-```sh
- gem install rails
-```
+- Java installed on your PC globally
 
 ### Setup
 
@@ -77,33 +73,25 @@ Clone this repository to your desired folder:
 
 ```sh
   cd my-folder
-  git https://github.com/alexansaa/Recipe_App.git
+  git https://github.com/alexansaa/SimpleProjectManagement.git
 ```
 
 ### Install
 
 Install this project with:
 
-```sh
-  cd my-project
-  gem install
-```
+The project does not require any further installation.
+You can get an executable file out of this raw code.
 
 ### Usage
 
 To run the project, execute the following command:
 
-```sh
-  rails server
-```
-
-### Run tests
-
-To run tests, run the following command:
-
-```sh
-  rspec spec/models/model_name_spec.rb
-```
+-- Use Application.java as entry point to the application when running the program
+-- application UI will pop up on a browser tab, so you can start using the application
+-- "Usuario1" & "Pass1" are used as credetials for a mock Admin user
+-- "Usuario2" & "Pass1" are used as credetials for a mock Client user
+-- You can create your own username and password if the given username has not been registered previously into the program data
 
 ### Deployment
 
@@ -124,22 +112,15 @@ Example:
 
 ## 👥 Authors <a name="authors"></a>
 
-👤 **Macherki Nessrine**
+👤 **Kleber Saavedra**
 
-- GitHub: [@githubhandle](https://github.com/Nessrine88)
-- Twitter: [@twitterhandle](https://twitter.com/Nessour88)
-- LinkedIn: [LinkedIn](https://www.linkedin.com/in/nessrine-macherki-86959196/)
+- GitHub: [@alexander](https://github.com/alexansaa)
+- LinkedIn: [Kleber Saavedra](https://www.linkedin.com/in/alexander-saavedra-garcia/)
 
-👤 **Alexander**
+👤 **Pablo Arcos**
 
-- [GitHub](https://github.com/alexansaa)
-- [LinkedIn](https://www.linkedin.com/in/alexander-saavedra-2803b1b6/)
-
-👤 **EL MEHDI AHMIDOU**
-
-- GitHub: [@ahmidou09](https://github.com/ahmidou09)
-- Twitter: [@el_ahmidou](https://twitter.com/el_ahmidou)
-- LinkedIn: [el mehdi ahmidou](https://www.linkedin.com/in/el-mehdi-ahmidou-312590125/)
+- GitHub: [@alexander](https://github.com/Pablin72)
+- LinkedIn: [Pablo Arcos](https://www.linkedin.com/in/pablo-arcos-559348211/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -147,8 +128,9 @@ Example:
 
 ## 🔭 Future Features <a name="future-features"></a>
 
-- [ ] **[Models]**
-- [ ] **[Authentication with Devise]**
+- [ ] **[DataBase information preservation]**
+- [ ] **[Implement Authentication and Authorization]**
+- [ ] **[Deploy the application]**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -158,7 +140,7 @@ Example:
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/alexansaa/Recipe_App/issues).
+Feel free to check the [issues page](https://github.com/alexansaa/SimpleProjectManagement/issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -170,7 +152,7 @@ If you like this project, please give it a star on GitHub
 
 ## 🙏 Acknowledgments <a name="acknowledgements"></a>
 
-I would like to thank Microverse for giving me this project to build
+I would like to thank Karo Quinaloa for letting me work with one or her clients
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
