@@ -119,7 +119,7 @@ Example:
 
 👤 **Pablo Arcos**
 
-- GitHub: [@alexander](https://github.com/Pablin72)
+- GitHub: [@Pablin72](https://github.com/Pablin72)
 - LinkedIn: [Pablo Arcos](https://www.linkedin.com/in/pablo-arcos-559348211/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
