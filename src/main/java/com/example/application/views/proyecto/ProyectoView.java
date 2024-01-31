@@ -7,6 +7,7 @@ import com.example.application.views.MainLayout;
 import com.example.application.views.home.HomeView;
 import com.example.application.views.login.LoginView;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.*;
@@ -100,7 +101,7 @@ public class ProyectoView extends Composite<VerticalLayout> {
         layoutColumn4.setHeight("85px");
         layoutColumn4.setJustifyContentMode(JustifyContentMode.START);
         layoutColumn4.setAlignItems(Alignment.END);
-        h4.setText("Estado: ");
+        h4.setText("Estado: " + project.getEstado());
         layoutColumn4.setAlignSelf(FlexComponent.Alignment.END, h4);
         h4.setWidth("max-content");
         h4.setHeight("1000px");
@@ -186,6 +187,25 @@ public class ProyectoView extends Composite<VerticalLayout> {
         }
     }
 
+    private void eliminarProyecto(){
+        LoginView.deleteProject(MainLayout.project);
+        getUI().ifPresent(ui -> ui.navigate("crear-proyecto"));
+
+        getUI().ifPresentOrElse(
+        ui -> ui.navigate("home"), // Se ejecuta si el valor está presente
+        new Runnable() {
+            @Override
+            public void run() {
+                UI ui = UI.getCurrent();
+                if (ui != null) {
+                    ui.navigate("home");
+                }
+            }
+        } // Se ejecuta si el valor no está presente
+    );
+        
+    }
+
     private void navigateToTask(Task task) {  
         tarea = task;
         getUI().ifPresent(ui -> ui.navigate("proyecto"));
@@ -194,8 +214,10 @@ public class ProyectoView extends Composite<VerticalLayout> {
 
     private void setMenuBarSampleData(MenuBar menuBar) {
         HomeView.volverMenu = false;
-        menuBar.addItem("Editar Proyecto");
-        menuBar.addItem("Eliminar Proyecto");
+        menuBar.addItem("Editar Proyecto", e -> getUI().ifPresent(ui -> ui.navigate("editar-proyecto")));
+        menuBar.addItem("Eliminar Proyecto", e -> {
+            eliminarProyecto();
+        });
         menuBar.addItem("Crear Nuevo Proyecto", e -> getUI().ifPresent(ui -> ui.navigate("crear-proyecto")));
         menuBar.addItem("Crear Tarea", e -> getUI().ifPresent(ui -> ui.navigate("crear-tarea")));
     }
