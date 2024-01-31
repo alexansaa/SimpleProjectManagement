@@ -1,45 +1,165 @@
-# project-management
+<a name="readme-top"></a>
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+# 📗 Table of Contents
 
-## Running the application
+- [📖 About the Project](#about-project)
+  - [🛠 Built With](#built-with)
+    - [Tech Stack](#tech-stack)
+    - [Key Features](#key-features)
+- [💻 Getting Started](#getting-started)
+  - [Setup](#setup)
+  - [Prerequisites](#prerequisites)
+  - [Install](#install)
+  - [Usage](#usage)
+  - [Run tests](#run-tests)
+  - [Deployment](#triangular_flag_on_post-deployment)
+- [👥 Authors](#authors)
+- [🔭 Future Features](#future-features)
+- [🤝 Contributing](#contributing)
+- [⭐️ Show your support](#support)
+- [🙏 Acknowledgements](#acknowledgements)
+- [📝 License](#license)
 
-The project is a standard Maven project. To run it from the command line,
-type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+# 📖 [Simple Project Manager] <a name="about-project"></a>
 
-You can also import the project to your IDE of choice as you would with any
-Maven project. Read more on [how to import Vaadin projects to different IDEs](https://vaadin.com/docs/latest/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
+**[Simple Project Manager]**
+The Simple Project Manager app keeps track of all your projects, tasks, comments and users. It will allow you to create new projects, add new task to the project, assign users to tasks, and adding new comments to tasks. Users are managed also by the program, so the application is stand alone. You can create an executable file out of the raw code on this repo. 
 
-## Deploying to Production
+This application uses serialized local files to keep record of data stored. Instead of using al SpringBoot functionalities, this applications defines its own class for managing stored data into serialized files, which will map to objects arrays used by the application.
 
-To create a production build, call `mvnw clean package -Pproduction` (Windows),
-or `./mvnw clean package -Pproduction` (Mac & Linux).
-This will build a JAR file with all the dependencies and front-end resources,
-ready to be deployed. The file can be found in the `target` folder after the build completes.
+## 🛠 Built With <a name="built-with"></a>
 
-Once the JAR file is built, you can run it using
-`java -jar target/project-management-1.0-SNAPSHOT.jar`
+### Tech Stack <a name="tech-stack"></a>
 
-## Project structure
+<details>
+  <summary>Client</summary>
+  <ul>
+    <li><a href="https://www.java.com/es/download/ie_manual.jsp">Java</a></li>
+    <li><a href="https://spring.io/projects/spring-boot">Spring Boot</a></li>
+    <li><a href="https://vaadin.com/">Vaadin</a></li>
+  </ul>
+</details>
 
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/docs/components/app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `frontend/` contains the client-side JavaScript views of your application.
-- `themes` folder in `frontend/` contains the custom CSS styles.
+### Key Features <a name="key-features"></a>
 
-## Useful links
+- **[Models]**
+-- Comment
+-- Project
+-- Task
+-- User
+- **[Controllers]**
+-- appDtatManipulator
+- **[Views]**
+-- home
+-- login
+-- Create and Edit forms
+-- Projects, Tasks, Comments Pages
 
-- Read the documentation at [vaadin.com/docs](https://vaadin.com/docs).
-- Follow the tutorial at [vaadin.com/docs/latest/tutorial/overview](https://vaadin.com/docs/latest/tutorial/overview).
-- Create new projects at [start.vaadin.com](https://start.vaadin.com/).
-- Search UI components and their usage examples at [vaadin.com/docs/latest/components](https://vaadin.com/docs/latest/components).
-- View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes). 
-- Find a collection of solutions to common use cases at [cookbook.vaadin.com](https://cookbook.vaadin.com/).
-- Find add-ons at [vaadin.com/directory](https://vaadin.com/directory).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
-- Report issues, create pull requests in [GitHub](https://github.com/vaadin).
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 💻 Getting Started <a name="getting-started"></a>
+
+To get a local copy up and running, follow these steps.
+
+### Prerequisites
+
+In order to run this project you need:
+
+- Java installed on your PC globally
+
+### Setup
+
+Clone this repository to your desired folder:
+
+```sh
+  cd my-folder
+  git https://github.com/alexansaa/SimpleProjectManagement.git
+```
+
+### Install
+
+Install this project with:
+
+The project does not require any further installation.
+You can get an executable file out of this raw code.
+
+### Usage
+
+To run the project, execute the following command:
+
+-- Use Application.java as entry point to the application when running the program
+-- application UI will pop up on a browser tab, so you can start using the application
+-- "Usuario1" & "Pass1" are used as credetials for a mock Admin user
+-- "Usuario2" & "Pass1" are used as credetials for a mock Client user
+-- You can create your own username and password if the given username has not been registered previously into the program data
+
+### Deployment
+
+You can deploy this project using:
+Coming Soon
+
+<!--
+Example:
+
+```sh
+
+```
+ -->
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- AUTHORS -->
+
+## 👥 Authors <a name="authors"></a>
+
+👤 **Kleber Saavedra**
+
+- GitHub: [@alexander](https://github.com/alexansaa)
+- LinkedIn: [Kleber Saavedra](https://www.linkedin.com/in/alexander-saavedra-garcia/)
+
+👤 **Pablo Arcos**
+
+- GitHub: [@Pablin72](https://github.com/Pablin72)
+- LinkedIn: [Pablo Arcos](https://www.linkedin.com/in/pablo-arcos-559348211/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- FUTURE FEATURES -->
+
+## 🔭 Future Features <a name="future-features"></a>
+
+- [ ] **[DataBase information preservation]**
+- [ ] **[Implement Authentication and Authorization]**
+- [ ] **[Deploy the application]**
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTRIBUTING -->
+
+## 🤝 Contributing <a name="contributing"></a>
+
+Contributions, issues, and feature requests are welcome!
+
+Feel free to check the [issues page](https://github.com/alexansaa/SimpleProjectManagement/issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## ⭐️ Show your support <a name="support"></a>
+
+If you like this project, please give it a star on GitHub
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 🙏 Acknowledgments <a name="acknowledgements"></a>
+
+I would like to thank Karo Quinaloa for letting me work with one or her clients
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+
+## 📝 License <a name="license"></a>
+
+This project is [MIT](./LICENSE.md) licensed.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
